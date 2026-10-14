@@ -1,0 +1,12 @@
+measure,value
+sessions_compared,794
+agree_exactly,740
+differ_but_within_1_percent,8
+differ_by_more_than_1_percent,46
+sessions_missing_from_either_table,0
+first_session,2023-07-17
+last_session,2026-10-09
+per_security_volume_total_all_sessions,2784995460
+daily_summary_volume_total_all_sessions,3178834394
+per_security_volume_total_in_differing_sessions,45492980
+daily_summary_volume_total_in_differing_sessions,439303035

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Where the data behind each home-page slide comes from: dataset, publisher, licence, what was changed, how it was worked with, caveats, and downloads of the trimmed samples." />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Data and method — Afriyie</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body class="article-page">
+    <a class="skip-link" href="#notes">Skip to the notes</a>
+    <header class="site-header scrolled" data-header><div class="shell header-inner"><a class="wordmark" href="index.html" aria-label="CA Data Hub, home"><img class="brand-logo" src="assets/ca-data-hub-logo.png" alt="" width="88" height="44" /></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle><span class="sr-only">Open navigation</span><span aria-hidden="true"></span><span aria-hidden="true"></span></button><nav class="site-nav" id="site-nav" aria-label="Primary" data-nav><a href="index.html#about">About</a><a href="index.html#company" data-company-link>Company</a><a href="index.html#work">Portfolio</a><a href="blog.html">Blog</a><a href="index.html#contact">Contact</a></nav></div></header>
+    <main id="notes">
+      <div class="back-bar"><div class="shell"><a class="back-link" href="index.html#top" data-back><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5M11 5l-7 7 7 7"/></svg><span>Back to home</span></a></div></div>
+      <header class="article-hero"><div class="shell"><p class="eyebrow">Data and method · Real public data</p><h1>Where the hero data comes from</h1><p class="article-deck">Every slide on the home page uses real public data. This page records, for each slide, the dataset, the licence, what I changed, how I worked with it, and what it cannot tell you. Where the licence allows it, the trimmed sample is here to download so you can check my work.</p></div></header>
+      <article class="article-body demo-body">
+        <p class="demo-notice" role="note"><strong>Read this first.</strong> Each slide is laid out like a one-page report: figures at the top, charts below, and small selectors where there is something to choose. Selectors only change what is drawn from the same data; they never add data. All files are plain CSV text. The samples are small and trimmed. Nothing here is investment advice, and no private or client data is used anywhere on this page or on the slides.</p>
+
+        <section id="slide-1" aria-labelledby="s1-title">
+          <h2 id="s1-title">Slide 1 · Ghana Stock Exchange trend</h2>
+          <table class="case-table"><tbody>
+            <tr><th scope="row">Dataset</th><td>GSE daily market summary: the GSE Composite Index level for each trading session.</td></tr>
+            <tr><th scope="row">Publisher</th><td>Ghana Stock Exchange, published on <a href="https://gse.com.gh/trading-and-data/">gse.com.gh/trading-and-data</a>.</td></tr>
+            <tr><th scope="row">Licence</th><td>Not established. GSE's redistribution terms have not been confirmed, so I show only my own derived chart and offer no data file.</td></tr>
+            <tr><th scope="row">Retrieved</th><td>Collected by my own market-data pipeline; the latest session shown is 9 October 2026.</td></tr>
+            <tr><th scope="row">What I changed</th><td>Kept one column (the composite index level) and one row per session. One date appears twice in the source with agreeing values; I kept the first.</td></tr>
+          </tbody></table>
+          <h3>How I worked with it</h3>
+          <ol>
+            <li>Read the daily summary table the pipeline had already collected from the public page.</li>
+            <li>Kept the composite index level and the session date.</li>
+            <li>Removed the one repeated date after checking both rows agreed.</li>
+            <li>Drew the chosen period (1 month, 3 months, 6 months, 1 year or the full history) scaled to its own range, with the full history underneath and the chosen period shaded. The four figures at the top (latest level, change over the period, high, low) are calculated from the same sessions in the chosen period.</li>
+            <li>Checked that the last point on the chart equals the latest published level.</li>
+          </ol>
+          <h3>Caveats</h3>
+          <p>Sessions are only trading days, so gaps are weekends and holidays. The change over a period is last level against first level, so it depends on where the period starts. The charts are for reading a trend, not for deciding what to buy or sell. <a href="demo-gse.html">The GSE page</a> shows the source date and data-quality flags.</p>
+          <p><strong>Download:</strong> none, because redistribution terms are not established.</p>
+        </section>
+
+        <section id="slide-2" aria-labelledby="s2-title">
+          <h2 id="s2-title">Slide 2 · Absence by day, October 2026</h2>
+          <table class="case-table"><tbody>
+            <tr><th scope="row">Dataset</th><td>Absenteeism at work (740 absence records, 36 employee IDs, a Brazilian courier company).</td></tr>
+            <tr><th scope="row">Publisher</th><td>UCI Machine Learning Repository. Creators: Andrea Martiniano and Ricardo Ferreira. DOI 10.24432/C5X882.</td></tr>
+            <tr><th scope="row">Licence</th><td><a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 (CC BY 4.0)</a>: sharing and adapting is allowed with credit.</td></tr>
+            <tr><th scope="row">Source link</th><td><a href="https://archive.ics.uci.edu/dataset/445/absenteeism+at+work">archive.ics.uci.edu/dataset/445/absenteeism+at+work</a></td></tr>
+            <tr><th scope="row">Retrieved</th><td>11 October 2026. File Absenteeism_at_work.csv, SHA-256 <code>41930631aa5b14f91fde29ae595cefad2beac464ddf837bf8150487e40038320</code>.</td></tr>
+            <tr><th scope="row">What I changed</th><td>Kept three employee IDs (3, 28, 34) and four columns (ID, month, weekday, absence hours). Dropped everything else, including age, family and health fields. Placed each absence onto an October 2026 weekday; the source has no real dates.</td></tr>
+          </tbody></table>
+          <h3>How I worked with it</h3>
+          <ol>
+            <li>Picked three of the most frequently recorded employee IDs before looking at the hours.</li>
+            <li>Dropped the three rows with no month and the rows with zero absence hours.</li>
+            <li>For each person chose the calendar month that has the most absences and fits an October grid (at most four Mondays to Wednesdays and five Thursdays and Fridays).</li>
+            <li>Placed each absence on its recorded weekday: the first on that weekday goes to the first available week, the next to the following week, and so on. Dates are therefore shifted and ordered by me, not real.</li>
+            <li>Marked 8 hours or more as a full day and under 8 hours as a part day; the four figures above the grid and the hours column at the right of each week are counted from the same cells.</li>
+          </ol>
+          <h3>Caveats</h3>
+          <p>I looked for open, real clock-in or badge data with arrival times per person per day (workplace time clocks, access-control swipes, shift logs). I found none that I could confirm is real, openly licensed and downloadable without a sign-in, so this slide shows absence, not lateness, and no arrival times are invented. The data lists absences only. There are no arrival times, so nothing on this slide measures lateness, and a blank day means "no absence recorded", not proof of attendance. The source gives a month but no day or year, so the October dates are a presentation choice. IDs are anonymous. Absences of 16 hours or more are one record on one day.</p>
+          <p><strong>Download:</strong> <a href="downloads/absence-sample-oct-2026.csv" download>absence-sample-oct-2026.csv</a> (4 KB, 244 rows: all rows of the three IDs; <code>used_in_slide</code> says which were placed, <code>shifted_date</code> where).</p>
+          <p class="caption">Attribution: Martiniano, A. and Ferreira, R., Absenteeism at work, UCI Machine Learning Repository, CC BY 4.0. Trimmed and re-dated by Afriyie.</p>
+        </section>
+
+        <section id="slide-3" aria-labelledby="s3-title">
+          <h2 id="s3-title">Slide 3 · Daily rentals against a 4-week average</h2>
+          <table class="case-table"><tbody>
+            <tr><th scope="row">Dataset</th><td>Bike Sharing Dataset, daily file (731 days, 2011 to 2012, Washington D.C.).</td></tr>
+            <tr><th scope="row">Publisher</th><td>UCI Machine Learning Repository. Creator: Hadi Fanaee-T, University of Porto. DOI 10.24432/C5W894.</td></tr>
+            <tr><th scope="row">Licence</th><td><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. The counts come from the Capital Bikeshare system data, which has its own terms at <a href="https://capitalbikeshare.com/system-data">capitalbikeshare.com/system-data</a>.</td></tr>
+            <tr><th scope="row">Source link</th><td><a href="https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset">archive.ics.uci.edu/dataset/275/bike+sharing+dataset</a></td></tr>
+            <tr><th scope="row">Retrieved</th><td>11 October 2026. File day.csv, SHA-256 <code>a6bcf826782d3c0fbfdcbeead17cd0884185a0dafe8ff10cd48a874ee7ba18be</code>.</td></tr>
+            <tr><th scope="row">What I changed</th><td>Kept date, weekday and total rentals for the four working weeks starting 6, 13, 20 and 27 August 2012 and the four weeks before each (100 rows). Dates are not shifted.</td></tr>
+          </tbody></table>
+          <h3>How I worked with it</h3>
+          <ol>
+            <li>Looked for working weeks with no holiday or non-working day in them or in the four weeks before; four consecutive ones in August 2012 qualify, and they are the weeks you can pick.</li>
+            <li>For each weekday, took the same weekday in each of the four earlier weeks.</li>
+            <li>Set the <em>target</em> to the average of those four values. This is my method, not a target the operator set.</li>
+            <li>Compared each day's actual rentals with its target. The figures at the top add the five days: actual, target, the difference as a percentage and the weakest day.</li>
+            <li>Showed values in thousands on the chart so five pairs fit; the table beside it gives the exact counts. In the table, amber means a day more than 5% under its target (my threshold).</li>
+          </ol>
+          <h3>Caveats</h3>
+          <p>Four weeks are a demonstration, not a forecast. The weeks were chosen because they are clean, so they look more stable than a typical month. Weather and season are in the source but not used here.</p>
+          <p><strong>Download:</strong> <a href="downloads/bike-rentals-actual-vs-target-sample.csv" download>bike-rentals-actual-vs-target-sample.csv</a> (5 KB, 100 rows; <code>week_of</code> is the Monday of the week each row belongs to).</p>
+          <p class="caption">Attribution: Fanaee-T, H., Bike Sharing [Dataset], UCI Machine Learning Repository, CC BY 4.0. Trimmed by Afriyie.</p>
+        </section>
+
+        <section id="slide-4" aria-labelledby="s4-title">
+          <h2 id="s4-title">Slide 4 · Does the ledger balance?</h2>
+          <table class="case-table"><tbody>
+            <tr><th scope="row">Dataset</th><td>Anonymized General Ledger Dataset (file GL_Dataset.csv, 21,551 lines).</td></tr>
+            <tr><th scope="row">Publisher</th><td>Charm Myae Aung, on <a href="https://www.kaggle.com/datasets/charmmyaeaung/anonymized-general-ledger-dataset">Kaggle</a>.</td></tr>
+            <tr><th scope="row">Licence</th><td>CC0: Public Domain, as stated on the dataset page.</td></tr>
+            <tr><th scope="row">Retrieved</th><td>8 October 2026.</td></tr>
+            <tr><th scope="row">What I changed</th><td>Nothing in the source. The counts are my calculations over all lines, before and after the cleaning steps.</td></tr>
+          </tbody></table>
+          <h3>How I worked with it</h3>
+          <ol>
+            <li>Read the raw file as delivered and counted what looks out of balance.</li>
+            <li>Normalised text and number formats, then counted again.</li>
+            <li>Tested the most tempting fix (removing repeated lines) against a control total before accepting it.</li>
+            <li>Checked each transaction ID separately: debits against credits.</li>
+            <li>Listed what still does not balance instead of forcing it.</li>
+            <li>Showed the total imbalance (debits minus credits) before and after cleaning on the same scale, so the size of the change is visible; the dataset gives no currency, so these are plain amounts.</li>
+          </ol>
+          <h3>Caveats</h3>
+          <p>The dataset gives no currency or account names and its author says it does not represent real accounting records. The step-by-step version is on <a href="data-cleaning-walkthrough.html">the cleaning walkthrough</a>.</p>
+          <p><strong>Download:</strong> none here. The original file is published by its author on Kaggle under CC0 (Kaggle may ask you to sign in).</p>
+        </section>
+
+        <section id="slide-5" aria-labelledby="s5-title">
+          <h2 id="s5-title">Slide 5 · Do two public GSE tables agree?</h2>
+          <table class="case-table"><tbody>
+            <tr><th scope="row">Dataset</th><td>My own comparison of two public Ghana Stock Exchange tables: the daily market summary volume, and the per-security daily trading volumes added up for the same session.</td></tr>
+            <tr><th scope="row">Publisher</th><td>Ghana Stock Exchange (<a href="https://gse.com.gh/trading-and-data/">gse.com.gh/trading-and-data</a>). The comparison is mine.</td></tr>
+            <tr><th scope="row">Licence</th><td>GSE's redistribution terms are not established. Only my derived counts and totals are shown and offered; no GSE rows are published.</td></tr>
+            <tr><th scope="row">Retrieved</th><td>Collected by my pipeline; sessions 17 July 2023 to 9 October 2026. Source comparison file SHA-256 <code>144e4061623ac5d598e15d4750730af5fe8e786c22c2bf706bec026eb28c5bd9</code>.</td></tr>
+            <tr><th scope="row">What I changed</th><td>Counted sessions in three groups and added the volume totals. Everything else was left out.</td></tr>
+          </tbody></table>
+          <h3>How I worked with it</h3>
+          <ol>
+            <li>For each session, added the volumes of every listed security.</li>
+            <li>Took the volume the daily summary reports for the same session.</li>
+            <li>Measured the difference as a share of the summary volume; 1% or less counts as "within tolerance".</li>
+            <li>Counted exact matches, small differences and larger differences, and checked no session was missing from either table.</li>
+            <li>Kept the count of larger differences visible, with their totals, rather than hiding them in one overall total.</li>
+          </ol>
+          <h3>Caveats</h3>
+          <p>A difference shows that two published tables disagree, not which one is wrong. The 1% tolerance is my choice. The invented-record version of this idea is on <a href="demo-reconciliation.html">the reconciliation demonstration</a>.</p>
+          <p><strong>Download:</strong> <a href="downloads/gse-volume-reconciliation-summary.csv" download>gse-volume-reconciliation-summary.csv</a> (under 1 KB, my derived counts and totals only).</p>
+        </section>
+
+        <div class="article-cta"><h2>Questions about a number?</h2><p>Each slide shows its source in the footer. If something here is unclear or you find a mistake, tell me through the contact details on the home page.</p><a class="text-link" href="index.html#contact">Get in touch <span aria-hidden="true">→</span></a></div>
+      </article>
+    </main>
+    <footer class="site-footer"><div class="shell footer-inner"><p>© <span data-year></span> Afriyie</p><p><a href="index.html#work">Back to selected work</a></p></div></footer>
+  </body>
+</html>

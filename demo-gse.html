@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A public-data prototype: Ghana Stock Exchange closing prices with the source session date, a freshness warning, and visible data-quality flags. No recommendations." />
+    <meta name="theme-color" content="#ffffff" />
+    <title>GSE source-dated snapshot — Afriyie</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="data/gse-snapshot.js" defer></script>
+    <script src="script.js" defer></script>
+    <script src="demo-gse.js" defer></script>
+  </head>
+  <body class="article-page">
+    <a class="skip-link" href="#demo">Skip to demonstration</a>
+    <header class="site-header scrolled" data-header><div class="shell header-inner"><a class="wordmark" href="index.html" aria-label="CA Data Hub, home"><img class="brand-logo" src="assets/ca-data-hub-logo.png" alt="" width="88" height="44" /></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle><span class="sr-only">Open navigation</span><span aria-hidden="true"></span><span aria-hidden="true"></span></button><nav class="site-nav" id="site-nav" aria-label="Primary" data-nav><a href="index.html#about">About</a><a href="index.html#company" data-company-link>Company</a><a href="index.html#work">Portfolio</a><a href="blog.html">Blog</a><a href="index.html#contact">Contact</a></nav></div></header>
+    <main id="demo">
+      <div class="back-bar"><div class="shell"><a class="back-link" href="index.html#work" data-back><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5M11 5l-7 7 7 7"/></svg><span>Back to portfolio</span></a></div></div>
+      <header class="article-hero"><div class="shell"><p class="eyebrow">Demonstration · Public data · Prototype</p><h1>Ghana Stock Exchange snapshot</h1><p class="article-deck">Public closing prices shown with the session they come from, how old they are, and what was withheld or flagged. It demonstrates a method for presenting market data carefully.</p><div class="article-meta"><span>Role: research &amp; analytical design</span><span>Data: public GSE daily share data</span><span>Not investment advice</span></div></div></header>
+      <div class="article-body demo-body">
+        <p class="demo-fresh" id="fresh" role="status"></p>
+        <p class="demo-notice" role="note"><strong>Read this first.</strong> This page offers no recommendations, targets or return forecasts. It is a prototype, prices are not real time and may be corrected by the exchange, and nothing here is financial advice. Check current prices at the exchange before relying on any figure.</p>
+
+        <div class="demo-kpis" aria-label="Snapshot summary">
+          <div><b id="k-shown">–</b><span>Shares shown</span></div>
+          <div><b id="k-notrade">–</b><span>No trades that session</span></div>
+          <div><b id="k-large">–</b><span>Large move to confirm</span></div>
+          <div><b id="k-withheld">–</b><span>Withheld</span></div>
+        </div>
+
+        <div class="demo-search">
+          <label for="q">Filter by symbol or name</label>
+          <input id="q" type="search" autocomplete="off" placeholder="e.g. GCB or Bank" />
+          <label><input id="flagged" type="checkbox" /> Show only flagged rows</label>
+        </div>
+        <p class="sr-only" id="count" aria-live="polite"></p>
+
+        <div class="demo-table-wrap" tabindex="0" role="region" aria-label="Closing prices by share">
+          <table class="case-table demo-table">
+            <caption class="sr-only">Closing price, previous close, change and volume for each listed share, with data-quality flags</caption>
+            <thead><tr><th scope="col">Symbol</th><th scope="col">Company</th><th scope="col">Close (GHS)</th><th scope="col">Previous (GHS)</th><th scope="col">Change</th><th scope="col">Volume</th><th scope="col">Flags</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+
+        <h2>What was checked, and what was left out</h2>
+        <ul id="checks"></ul>
+        <h2>Where the figures come from</h2>
+        <ul id="provenance"></ul>
+        <h2>Limits</h2>
+        <ul>
+          <li>One session is shown. The underlying pipeline holds a longer history, but this page makes no claim about trends or performance.</li>
+          <li>Corporate actions (for example splits or bonus issues) can change how prices compare across dates; this prototype does not adjust for them.</li>
+          <li>The share list reflects identities the pipeline has confirmed, not necessarily every instrument the exchange lists.</li>
+        </ul>
+        <div class="article-cta"><h2>Related</h2><p>The approach behind this prototype is described in the case study.</p><a class="text-link" href="gse-analysis-case-study.html">Read the case study →</a></div>
+      </div>
+    </main>
+    <footer class="site-footer"><div class="shell footer-inner"><p>© <span data-year></span> Afriyie</p><p><a href="index.html#work">Back to portfolio</a></p></div></footer>
+  </body>
+</html>

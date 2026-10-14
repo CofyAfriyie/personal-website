@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="An interactive prototype using synthetic records: match two sources step by step and see which exceptions need a person." />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Reconciliation demonstration — Afriyie</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+    <script src="demo-reconciliation.js" defer></script>
+  </head>
+  <body class="article-page">
+    <a class="skip-link" href="#demo">Skip to demonstration</a>
+    <header class="site-header scrolled" data-header><div class="shell header-inner"><a class="wordmark" href="index.html" aria-label="CA Data Hub, home"><img class="brand-logo" src="assets/ca-data-hub-logo.png" alt="" width="88" height="44" /></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle><span class="sr-only">Open navigation</span><span aria-hidden="true"></span><span aria-hidden="true"></span></button><nav class="site-nav" id="site-nav" aria-label="Primary" data-nav><a href="index.html#about">About</a><a href="index.html#company" data-company-link>Company</a><a href="index.html#work">Portfolio</a><a href="blog.html">Blog</a><a href="index.html#contact">Contact</a></nav></div></header>
+    <main id="demo">
+      <div class="back-bar"><div class="shell"><a class="back-link" href="index.html#work" data-back><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5M11 5l-7 7 7 7"/></svg><span>Back to portfolio</span></a></div></div>
+      <header class="article-hero"><div class="shell"><p class="eyebrow">Demonstration · Synthetic data · Prototype</p><h1>Reconciliation &amp; exceptions</h1><p class="article-deck">Two made-up record sets, matched in a deliberate order. Step through it and see what clears automatically and what still needs a person.</p><div class="article-meta"><span>Role: analysis &amp; control design</span><span>Data: invented for this demonstration</span><span>No measured results</span></div></div></header>
+      <div class="article-body demo-body">
+        <p class="demo-notice" role="note"><strong>Read this first.</strong> Every record below is synthetic. This is a working prototype of the matching logic, not a deployed system, and it does not show results from any real organisation.</p>
+
+        <div class="demo-controls" role="group" aria-label="Matching steps">
+          <button type="button" class="demo-step" data-step="0" aria-pressed="true">0 · Raw records</button>
+          <button type="button" class="demo-step" data-step="1" aria-pressed="false">1 · Normalise</button>
+          <button type="button" class="demo-step" data-step="2" aria-pressed="false">2 · Exact references</button>
+          <button type="button" class="demo-step" data-step="3" aria-pressed="false">3 · Controlled combinations</button>
+          <button type="button" class="demo-step" data-step="4" aria-pressed="false">4 · Exception queue</button>
+        </div>
+        <p class="demo-explain" id="step-explain" aria-live="polite"></p>
+
+        <div class="demo-kpis" aria-live="polite" aria-label="Reconciliation totals">
+          <div><b id="k-a">–</b><span>Source A records</span></div>
+          <div><b id="k-exact">–</b><span>Matched exactly</span></div>
+          <div><b id="k-prob">–</b><span>Probable (review)</span></div>
+          <div><b id="k-open">–</b><span>Open exceptions</span></div>
+        </div>
+        <p class="demo-identity" id="identity"></p>
+
+        <h2>Records</h2>
+        <div class="demo-table-wrap" tabindex="0" role="region" aria-label="Source A records with match status">
+          <table class="case-table demo-table">
+            <caption class="sr-only">Source A records with their match status at the selected step</caption>
+            <thead><tr><th scope="col">Ref (A)</th><th scope="col">Date</th><th scope="col">Party</th><th scope="col">Amount (GHS)</th><th scope="col">Status</th><th scope="col">Matched to</th></tr></thead>
+            <tbody id="rows-a"></tbody>
+          </table>
+        </div>
+
+        <h2>Source B records</h2>
+        <div class="demo-table-wrap" tabindex="0" role="region" aria-label="Source B records with match status">
+          <table class="case-table demo-table">
+            <caption class="sr-only">Source B records and their match status at the selected step</caption>
+            <thead><tr><th scope="col">Ref (B)</th><th scope="col">Date</th><th scope="col">Party</th><th scope="col">Amount (GHS)</th><th scope="col">Status</th></tr></thead>
+            <tbody id="rows-b"></tbody>
+          </table>
+        </div>
+
+        <h2>What a reviewer would do next</h2>
+        <ol id="actions"></ol>
+
+        <h2>Limits of this demonstration</h2>
+        <ul>
+          <li>The records are invented; there are no real accounts, customers or transactions.</li>
+          <li>The rules are simple and fixed so the logic is easy to inspect. A real engagement would agree rules, tolerances and ownership first.</li>
+          <li>No time-saving, accuracy or cost figures are claimed. Counts shown are of these synthetic records only.</li>
+        </ul>
+        <div class="article-cta"><h2>Related</h2><p>The method behind this demonstration is described in the case study.</p><a class="text-link" href="reconciliation-case-study.html">Read the case study →</a></div>
+      </div>
+    </main>
+    <footer class="site-footer"><div class="shell footer-inner"><p>© <span data-year></span> Afriyie</p><p><a href="index.html#work">Back to portfolio</a></p></div></footer>
+  </body>
+</html>

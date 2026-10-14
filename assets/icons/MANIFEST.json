@@ -1,0 +1,84 @@
+{
+ "set": "Google Material Icons (baseline)",
+ "repository": "https://github.com/google/material-design-icons",
+ "note": "Path data is inlined in index.html with fill=currentColor; files are kept for provenance.",
+ "icons": [
+  {
+   "file": "arrow_forward.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/navigation/arrow_forward/materialicons/24px.svg",
+   "sha256": "2f48309fb6ccc7b38a6412757801cd7d07e40b492f64e7146e8899d5a0e7c39a",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "assessment.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/action/assessment/materialicons/24px.svg",
+   "sha256": "818e0c78c0b1468f1c26f15f9b800c9aca8ddc6c7e9e13ad4145735e479b15bf",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "assignment_turned_in.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/action/assignment_turned_in/materialicons/24px.svg",
+   "sha256": "c39218b05a37f64437009472437db974099b2fdd4b93b212105efeeddbc781a7",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "compare_arrows.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/action/compare_arrows/materialicons/24px.svg",
+   "sha256": "e452e0dfb557d9bfe189f11c1f4197b4326a3a0eea173904d54722aedc8ebc30",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "description.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/action/description/materialicons/24px.svg",
+   "sha256": "ffe4041194ad06a93b1dd035c807578c85aa64262ba9e9892001d518a4f6521b",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "dns.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/action/dns/materialicons/24px.svg",
+   "sha256": "af6ac146ec9d8c9ceb67cefaa149b914eb6d7861a07de31db17c6f50117bfac5",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "people.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/social/people/materialicons/24px.svg",
+   "sha256": "fe20812d24378184bcf8f42344a5521ac716f865a8774a5b8a386203c0ce9e95",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "school.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/social/school/materialicons/24px.svg",
+   "sha256": "7860891046e6fc49681f4cb0a0ad4d47a621150cc1037b20e7a8a49212da077b",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "table_chart.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/editor/table_chart/materialicons/24px.svg",
+   "sha256": "22054808375ead2569e110f7216b56880a3ef0bf073d9c868fdc235acd17cba2",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "trending_up.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/action/trending_up/materialicons/24px.svg",
+   "sha256": "8e8a53e1d83fe24e44fc5681383ba0dc5215d45db4279606d00d9b8217e436f7",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  },
+  {
+   "file": "verified_user.svg",
+   "source": "https://github.com/google/material-design-icons/blob/master/src/action/verified_user/materialicons/24px.svg",
+   "sha256": "776b777deab1dcb069c834d6e5d58aaf01a45ac4a5ab97f1c9a0b04f8b8b9a02",
+   "licence": "Apache-2.0 (LICENSE-Apache-2.0.txt)",
+   "downloaded": "2026-10-07"
+  }
+ ]
+}
