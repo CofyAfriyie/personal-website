@@ -41,7 +41,7 @@
   const start = () => {
     stop();
     if (userPaused || hovering || document.hidden) return;
-    timer = setInterval(() => go(index + 1), 9000);
+    timer = setInterval(() => go(index + 1), 12000);
     restartProgress();
     setLive();
   };
@@ -53,9 +53,11 @@
     start();
   };
 
-  prev.addEventListener('click', () => { go(index - 1); start(); });
-  next.addEventListener('click', () => { go(index + 1); start(); });
-  dots.forEach((d, i) => d.addEventListener('click', () => { go(i); start(); }));
+  prev.addEventListener('click', () => { go(index - 1); });
+  next.addEventListener('click', () => { go(index + 1); });
+  dots.forEach((d, i) => d.addEventListener('click', () => { go(i); }));
+  /* Any use of the slideshow (arrows, dots, period buttons, charts) stops the automatic change for good; only the play button resumes it. */
+  root.addEventListener('click', (e) => { if (!e.target.closest('.ctl-pause') && !userPaused) setPaused(true); });
   pauseBtn.addEventListener('click', () => setPaused(!userPaused));
   root.addEventListener('pointerenter', () => { hovering = true; stop(); });
   root.addEventListener('pointerleave', () => { hovering = false; start(); });
@@ -65,8 +67,8 @@
   root.addEventListener('keydown', (e) => {
     if (e.target.closest('.chart-wrap')) return;
     if (!e.target.closest('.slide-controls, .ctl')) return;
-    if (e.key === 'ArrowLeft') { go(index - 1); start(); e.preventDefault(); }
-    if (e.key === 'ArrowRight') { go(index + 1); start(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { go(index - 1); setPaused(true); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { go(index + 1); setPaused(true); e.preventDefault(); }
   });
 
   /* swipe: simple pointer events on the slides (vertical scrolling stays with the page) */
