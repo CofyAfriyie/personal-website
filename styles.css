@@ -964,3 +964,180 @@ h2, .bt h2 { font-size: clamp(2rem, 4.1vw, 3.5rem); font-weight: 800; line-heigh
 .section-label { align-items: center; gap: 12px; font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
 .section-label span + span { padding: 5px 14px; font-size: 1.125rem; }
 @media (max-width: 560px) { .section-label, .section-label span + span { font-size: 1.0625rem; } }
+
+/* ===== Round 10 (16 Oct 2026): phone view. Shorter, less busy. Phone rules live only inside max-width: 700px; desktop rules above are untouched. ===== */
+.hook { display: none; }
+@media (min-width: 701px) { .rm-body { display: contents; } } /* keeps the wide-screen card layout exactly as before the Read more wrapper */
+.rm-btn { align-self: flex-start; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin: 6px 0 2px; padding: 0 18px; border: 2px solid var(--accent); border-radius: 12px; background: transparent; color: var(--accent-dark); font: inherit; font-size: .9375rem; font-weight: 700; cursor: pointer; }
+.rm-btn:hover { background: var(--soft); }
+.rm-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.bt-navy .rm-btn { border-color: rgba(255,255,255,.7); color: #fff; }
+.bt-navy .rm-btn:hover { background: rgba(255,255,255,.14); }
+.bt-navy .rm-btn:focus-visible { outline-color: #fff; }
+
+/* DESKTOP CHANGE D1: "my company, a separate site" line in the Company section (all widths). To revert: delete this rule and the <p class="company-sep"> line in index.html. */
+.company-copy .company-text > p { max-width: 62ch; color: var(--band-text); } /* same look as before the paragraphs were wrapped for Read more */
+.company-copy .company-sep { margin: 0 0 14px; color: #fff; font-size: 1.1875rem; font-weight: 650; line-height: 1.4; }
+
+@media (max-width: 700px) {
+  :root { --tile-pad: 16px; --radius: 20px; }
+  body { font-size: .96875rem; line-height: 1.55; }
+  h2, .bt h2 { font-size: 1.75rem; line-height: 1.08; letter-spacing: -.035em; margin-bottom: 10px; }
+  .demo-body h2, .section-grid h2, .article-body h2, .article-cta h2 { font-size: 1.5rem; }
+  .bt h3, h3 { font-size: 1.125rem; }
+  .section-label { margin-bottom: 8px; font-size: .9375rem; gap: 8px; }
+  .section-label span + span { padding: 2px 10px; font-size: .9375rem; }
+  .eyebrow { margin-bottom: 8px; font-size: .8125rem; }
+  .band { padding: 16px 0; }
+  .contact.band { padding: 8px 0 24px; }
+  .bento { gap: 12px; }
+  .bt { padding: 16px; }
+  .bt-head p, .bento-work .bt-head p, .bt-head.bt-top p { font-size: 1rem; padding-bottom: 0; }
+  .button { min-height: 44px; padding: 8px 18px; font-size: .9375rem; }
+  .button-secondary { min-height: 44px; padding: 6px 16px; gap: 6px; }
+  .button-secondary .arrow { width: 18px; height: 18px; }
+
+  /* Read more: hook line, clipped block, expand button */
+  .rm-on .hook { display: block; margin: 0 0 6px; color: var(--accent-dark); font-size: 1rem; font-weight: 700; line-height: 1.3; }
+  .rm-collapsed { overflow: hidden; max-height: 3.35em; line-height: 1.6; -webkit-mask-image: linear-gradient(#000 calc(100% - .5em), transparent); mask-image: linear-gradient(#000 calc(100% - .5em), transparent); }
+  .rm-collapsed p { margin-bottom: 0; }
+  .rm-collapsed > p:first-child { margin-top: 0; }
+  .rm-collapsed.skill-table { max-height: 9.5rem; }
+
+  /* Header and hero */
+  .hero { padding: 72px 0 12px; }
+  .hero-grid { gap: 12px; padding: 16px 10px; border-radius: 20px; }
+  .hero-copy { padding: 0 6px; }
+  .hero-copy h1 { max-width: none; margin: 6px 0 10px; font-size: 1.375rem; line-height: 1.22; }
+  .hero-copy .hero-intro { font-size: 1rem; line-height: 1.5; }
+  .hero-copy .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .hero-shot figcaption { margin-top: 10px; padding: 0 6px; font-size: .8125rem; line-height: 1.4; }
+  .bento-options { margin-top: 12px; gap: 8px; }
+  .option.bt { min-height: 56px; padding: 8px 14px; gap: 12px; font-size: .9375rem; }
+  .option.bt .ic { width: 20px; height: 20px; padding: 8px; border-radius: 12px; }
+
+  /* Slideshow: lighter frame, compact KPI cards, wide charts */
+  .device { padding: 4px; border-radius: 18px; }
+  .slideshow-card { border-radius: 14px; }
+  .slide { gap: 8px; padding: 10px 10px 4px; }
+  .slide-title { font-size: 1rem; }
+  .slide-head { gap: 2px 8px; }
+  .slide-tag { padding: 2px 10px; }
+  .report { gap: 8px; }
+  .slicer { gap: 2px 8px; }
+  .seg { min-width: 40px; padding-inline: 6px; }
+  .kpis { gap: 6px; }
+  .kpi { padding: 5px 9px; }
+  .kpi-val { font-size: 1.0625rem; line-height: 1.15; }
+  .kpi-label, .kpi-sub { line-height: 1.2; }
+  .tiles, .tiles-col { gap: 8px; }
+  .tile { padding: 7px 9px 8px; }
+  .tile-title { margin-bottom: 4px; line-height: 1.25; }
+  .chart-panel, .chart-body { flex: none; }
+  .chart-wrap { min-height: 0; aspect-ratio: 2.4 / 1; }
+  .over-wrap { height: 26px; }
+  .bars-box { min-height: 0; height: 128px; }
+  .att-table td { padding: 3px 1px; }
+  .tile-note { margin-top: 4px; }
+  .donut-box { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 2px 12px; justify-content: stretch; }
+  .donut { grid-row: 1 / span 2; width: 88px; height: 88px; }
+  .donut-cap { align-self: end; }
+  .key { align-self: start; }
+  .hbars { gap: 8px; }
+  .slide-foot { display: flex; flex-wrap: wrap; align-items: center; column-gap: 14px; font-size: .8125rem; line-height: 1.35; }
+  .slide-foot a { margin-right: 0; }
+  .js .slides { flex: none; align-items: flex-start; }
+
+  /* About: small round portrait beside the name; background as chips */
+  .bt-portrait { flex-direction: row; align-items: center; gap: 14px; padding: 12px 14px; }
+  .portrait.bt-portrait { max-width: none; }
+  .bt-portrait img { flex: none; width: 76px; height: 76px; max-width: none; aspect-ratio: 1; border-radius: 50%; object-position: center 20%; }
+  .bt-portrait figcaption { margin-top: 0; font-size: .875rem; line-height: 1.35; }
+  .portrait .cap-name { font-size: 1.0625rem; }
+  .bt-facts h3 { margin-bottom: 8px; font-size: 1rem; }
+  .fact-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fact-list li, .fact-list li:first-child { padding: 5px 12px; border: 0; border-radius: 99px; background: var(--soft); color: var(--ink); font-size: .875rem; line-height: 1.3; }
+  .bt-text .prose p { margin-bottom: .8em; }
+
+  /* Company */
+  .bt-logo { padding: 10px; }
+  .bt-logo .company-mark { padding: 8px; }
+  .bt-logo .company-mark img { max-width: 130px; }
+  .company-copy .company-sep { margin-bottom: 8px; font-size: 1.0625rem; }
+  .company-copy .company-text > p { max-width: none; }
+  .company-links { gap: 0 18px; margin-top: 10px; }
+  .company-links .button-primary { width: 100%; }
+
+  /* Portfolio, writing, certificates */
+  .portfolio-card.bt { padding: 10px 10px 12px; }
+  .portfolio-card .shot img { aspect-ratio: 2 / 1; object-position: top; border-radius: 12px; }
+  .portfolio-body { padding: 10px 4px 0; }
+  .portfolio-body h3 { margin: 0 0 2px; font-size: 1.1875rem; }
+  .status { margin-bottom: 2px; font-size: .8125rem; }
+  .rm-body { display: flex; flex-direction: column; }
+  .portfolio-body .asof { order: -1; margin: 0 0 6px; font-size: .8125rem; }
+  .portfolio-body p { margin-bottom: 8px; }
+  .portfolio-links { gap: 0 18px; padding-top: 0; }
+  .portfolio-links a { font-size: .9375rem; }
+  .note-card.bt h3 { margin-bottom: 4px; font-size: 1.125rem; }
+  .note-meta { margin-bottom: 4px; }
+  .note-card p:not(.note-meta) { margin: 0; }
+  .card-link { padding-top: 0; }
+  .bt-bar { min-height: 56px; font-size: 1.0625rem; }
+  .credential-card.bt { display: grid; grid-template-columns: 96px minmax(0, 1fr); column-gap: 12px; row-gap: 2px; padding: 12px; }
+  .credential-card.bt > div { display: contents; padding: 0; }
+  .credential-card .cert-img { grid-column: 1; grid-row: 1 / span 3; align-self: start; border-radius: 8px; }
+  .credential-card .note-meta, .credential-card h3, .credential-card .hook { grid-column: 2; }
+  .credential-card h3 { margin: 0; font-size: 1.0625rem; }
+  .credential-card p[data-readmore], .credential-card .rm-btn, .credential-card .text-link { grid-column: 1 / -1; }
+  .credential-card p { margin: 4px 0 0; }
+  .credential-card .rm-btn { justify-self: start; }
+
+  /* Phone: section headings sit on the band instead of in their own tile; article and certificate cards put Read more and the link on one row */
+  .bento-work .bt-head, .bento-ideas .bt-head, .bento-creds .bt-head, .bento-skills .bt-head { padding: 6px 2px 0; background: none; box-shadow: none; }
+  .bento-work .bt-head h2, .bento-ideas .bt-head h2, .bento-creds .bt-head h2, .bento-skills .bt-head h2 { color: var(--ink); margin-bottom: 4px; }
+  .bento-work .bt-head p, .bento-ideas .bt-head p { color: var(--muted); }
+  .bento-work .bt-head .section-label, .bento-ideas .bt-head .section-label, .bento-creds .bt-head .section-label, .bento-skills .bt-head .section-label { color: var(--accent-dark); }
+  .bento-work .bt-head .section-label span + span, .bento-ideas .bt-head .section-label span + span, .bento-creds .bt-head .section-label span + span, .bento-skills .bt-head .section-label span + span { background: var(--soft); color: var(--accent-dark); }
+  .note-card.bt { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; align-items: center; }
+  .note-card.bt > * { grid-column: 1 / -1; }
+  .note-card.bt > .rm-btn { grid-column: 1; }
+  .note-card.bt > .card-link { grid-column: 2; justify-self: end; margin: 0; }
+  .var-table th, .var-table td { padding: 3px 5px; }
+  .tile-bars { padding-bottom: 6px; }
+
+  /* Capabilities and contact */
+  .bt-skillhead h2 { font-size: 1.5rem; margin-bottom: 0; }
+  .bt-table { display: block; }
+  .skill-table td, .skill-table td + td { padding: 9px 0; font-size: .9375rem; line-height: 1.35; }
+  .contact-grid.bt { gap: 10px; padding: 18px 16px; }
+  .contact h2 { font-size: 1.625rem; margin-bottom: 0; }
+  .contact-copy > p:first-child { margin-bottom: 12px; font-size: .9375rem; }
+  .contact-copy .button { min-height: 48px; margin-bottom: 8px; font-size: .9375rem; }
+  .social-links { margin-top: 0; }
+  .footer-nav a { padding: 0 8px; }
+  .site-footer { padding: 8px 0 16px; }
+
+  /* Sub-pages: same tightening (desktop look unchanged) */
+  .article-hero h1, .blog-hero h1 { font-size: 1.875rem; }
+  .article-hero > .shell, .blog-hero > .shell { padding: 20px 16px; }
+  .article-deck, .blog-hero > .shell > p:last-child { font-size: 1.0625rem; }
+  .article-body { padding: 18px 14px; }
+  .article-body p, .article-body li { font-size: 1rem; }
+  .article-body h2 { margin: 28px 0 10px; }
+  .article-body blockquote { margin: 24px 0; padding: 16px; font-size: 1.125rem; }
+  .article-cta { margin-top: 36px; padding: 20px; }
+  .method-grid { gap: 10px; margin: 20px 0; }
+  .method-card { padding: 16px; }
+  .demo-kpis { gap: 8px; }
+  .demo-kpis div { padding: 12px 14px; }
+  .blog-card { padding: 18px 0; }
+}
+
+/* ===== Round 10 QA fixes (16 Oct 2026) ===== */
+.company-copy .company-sep { text-wrap: balance; } /* avoids the one-word last line ("one.") at 1440 px; only the D1 line is affected */
+@media (max-width: 700px) {
+  .ctl-prev { left: 6px; } .ctl-next { right: 6px; } /* later desktop rules (left/right -20px) pushed the phone arrows outside the navy panel */
+  .footer-inner { align-items: flex-start; } /* (c) line was centred, the next line left-aligned */
+  .js .slides { align-items: stretch; } .slide .report, .slide .tiles { flex: none; } .slide-foot { margin-top: auto; } /* stable slideshow height: the source line and links sit at the bottom, any spare space is above them */
+}
