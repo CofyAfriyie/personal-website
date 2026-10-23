@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSE Market Intelligence</title>
+<meta name="description" content="Independent research on the Ghana Stock Exchange and Ghana treasury bills: end-of-day prices, the GSE Composite Index, trading activity, and how the lab tests its own methods. Research, not financial advice.">
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #fbfaf7; --band: #f4f1ea; --panel: #ffffff; --ink: #17202a; --body: #2c3744; --muted: #5d6876; --line: #e4e0d6; --hair: #efece4;
+  --blue: #1d4f7c; --teal: #0e7f78; --amber: #b97400; --coral: #c8452f; --violet: #6345b0;
+  --blue-soft: #e5eef7; --teal-soft: #e1f3f1; --amber-soft: #fcf0d9; --coral-soft: #fbe6e1; --violet-soft: #eeeafa;
+  --up: #12804c; --down: #c5352b; --flat: #6b7480; --up-soft: #e3f4ea; --down-soft: #fbe5e3;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Inter, Roboto, sans-serif;
+  --shadow: 0 1px 2px rgba(23,32,42,.05), 0 8px 24px rgba(23,32,42,.07);
+  --r: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e141b; --band: #131b24; --panel: #18222d; --ink: #eef2f6; --body: #cdd6df; --muted: #9aa7b4; --line: #26323f; --hair: #1f2a35;
+    --blue: #7fb4e8; --teal: #4fcfc4; --amber: #f2b84b; --coral: #ff8a73; --violet: #b7a2ff;
+    --blue-soft: #16283b; --teal-soft: #122d2c; --amber-soft: #2d230f; --coral-soft: #331b16; --violet-soft: #221b38;
+    --up: #4ed493; --down: #ff7b70; --flat: #9aa7b4; --up-soft: #12301f; --down-soft: #3a1714;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--body); font: 16px/1.6 var(--sans); font-variant-numeric: tabular-nums; }
+a { color: var(--blue); }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: fixed; top: 10px; left: 10px; z-index: 50; padding: 10px 14px; background: var(--panel); border-radius: 10px; transform: translateY(-200%); }
+.skip:focus { transform: none; }
+.shell { width: min(100% - 32px, 1180px); margin-inline: auto; }
+
+/* masthead */
+.mast { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--panel) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.mast .shell { display: flex; align-items: center; gap: 16px; min-height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 750; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.logo { width: 30px; height: 30px; border-radius: 9px; background: conic-gradient(from 200deg, var(--teal), var(--blue), var(--violet), var(--coral), var(--amber), var(--teal)); }
+.mast nav { display: flex; gap: 2px; overflow-x: auto; margin-left: auto; scrollbar-width: none; }
+.mast nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 99px; color: var(--muted); text-decoration: none; font-size: .92rem; font-weight: 600; white-space: nowrap; }
+.mast nav a:hover { background: var(--band); color: var(--ink); }
+.home { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 99px; color: var(--ink); text-decoration: none; font-size: .9rem; font-weight: 650; white-space: nowrap; }
+
+/* hero */
+.hero { padding: 36px 0 12px; background: radial-gradient(1200px 380px at 85% -10%, var(--teal-soft), transparent 60%), radial-gradient(900px 320px at 0% 0%, var(--violet-soft), transparent 55%); }
+.kicker { font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
+h1 { font: 600 clamp(2rem, 5.2vw, 3.2rem)/1.08 var(--serif); color: var(--ink); margin: 10px 0 8px; letter-spacing: -.01em; }
+h2 { font: 600 clamp(1.45rem, 3vw, 1.85rem)/1.2 var(--serif); color: var(--ink); margin: 0 0 6px; }
+h3 { font-size: 1.05rem; color: var(--ink); margin: 0 0 6px; line-height: 1.3; }
+.stamp { color: var(--muted); font-size: .93rem; }
+.byline { margin: 0 0 6px; color: var(--body); font-size: .98rem; } .byline a { font-weight: 700; display: inline-block; padding: 8px 0; }
+.dashnote { display: block; color: var(--muted); font-size: .74rem; font-weight: 600; }
+.tabs { display: inline-flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tabs button { min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); color: var(--body); font: 650 .9rem var(--sans); cursor: pointer; }
+.tabs button[aria-selected="true"] { border-color: var(--coral); background: var(--coral-soft); color: var(--coral); }
+.feed { list-style: none; margin: 0; padding: 0; }
+.feed li { display: grid; grid-template-columns: 110px 1fr; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--hair); }
+.feed li:last-child { border-bottom: 0; }
+.feed time { color: var(--muted); font-size: .86rem; font-weight: 650; }
+.feed a { display: block; padding: 6px 0; color: var(--ink); font-weight: 650; text-decoration: none; }
+@media (max-width: 640px) { .feed a { padding: 10px 0; min-height: 44px; } }
+.feed a:hover { text-decoration: underline; color: var(--blue); }
+.feed .meta { display: block; margin-top: 3px; color: var(--muted); font-size: .84rem; }
+.feed .sym { display: inline-block; margin-right: 6px; padding: 0 8px; border-radius: 99px; background: var(--blue-soft); color: var(--blue); font-size: .74rem; font-weight: 800; }
+@media (max-width: 640px) { .feed li { grid-template-columns: 1fr; gap: 2px; } }
+.stamp b { color: var(--ink); }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+.kpi { position: relative; padding: 18px 18px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+.kpi::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--c, var(--blue)); }
+.kpi .l { font-size: .76rem; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; color: var(--c, var(--blue)); }
+.kpi .v { font-size: clamp(1.45rem, 2.6vw, 1.95rem); font-weight: 700; color: var(--ink); margin-top: 6px; line-height: 1.15; }
+.kpi .s { margin-top: 6px; font-size: .9rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 99px; font-size: .82rem; font-weight: 700; background: var(--band); color: var(--muted); }
+.pill.up { background: var(--up-soft); color: var(--up); } .pill.down { background: var(--down-soft); color: var(--down); }
+.note { display: flex; gap: 10px; align-items: center; margin: 18px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--amber-soft); color: var(--ink); font-size: .9rem; }
+.note b { color: var(--amber); }
+
+section.band { padding: 34px 0; border-top: 1px solid var(--line); scroll-margin-top: 64px; }
+.hero { scroll-margin-top: 64px; }
+@media (max-width: 640px) { section.band, .hero { scroll-margin-top: 112px; } }
+.pill.amber { background: var(--amber-soft); color: var(--amber); }
+section.band.tint { background: var(--band); }
+.sub { color: var(--muted); margin: 0 0 16px; max-width: 70ch; }
+.src { color: var(--muted); font-size: .82rem; margin-top: 10px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
+
+/* chart */
+.chart { padding: 16px; }
+.chart-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.seg { display: inline-flex; padding: 3px; gap: 3px; background: var(--band); border-radius: 99px; }
+.seg button { min-height: 44px; min-width: 52px; padding: 0 14px; border: 0; border-radius: 99px; background: transparent; color: var(--muted); font: 650 .88rem var(--sans); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--panel); }
+.period { font-weight: 700; color: var(--ink); }
+.chart svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.chart .grid { stroke: var(--hair); } .chart .ax { font: 12px var(--sans); fill: var(--muted); }
+.tip { position: absolute; pointer-events: none; padding: 6px 10px; border-radius: 10px; background: var(--ink); color: var(--panel); font-size: .82rem; font-weight: 600; white-space: nowrap; transform: translate(-50%, -120%); opacity: 0; transition: opacity .12s; }
+.plot { position: relative; }
+
+/* breadth */
+.breadth { padding: 16px 18px; }
+.bar { display: flex; height: 16px; border-radius: 99px; overflow: hidden; background: var(--band); margin: 10px 0 12px; }
+.bar span { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .9rem; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+
+/* shares */
+.tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips button { min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); color: var(--body); font: 600 .88rem var(--sans); cursor: pointer; }
+.chips button[aria-pressed="true"] { border-color: var(--teal); background: var(--teal-soft); color: var(--teal); }
+.sortsel { display: none; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); font: inherit; }
+.search { position: relative; flex: 1 1 240px; display: flex; }
+.search input { width: 100%; min-height: 44px; padding: 0 52px 0 14px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); color: var(--ink); font: inherit; }
+.mic { position: absolute; right: 2px; top: 2px; width: 40px; height: 40px; border: 0; border-radius: 99px; background: var(--violet); color: #fff; cursor: pointer; display: grid; place-items: center; }
+.mic svg { width: 18px; height: 18px; }
+.mic[aria-pressed="true"] { background: var(--coral); }
+.hint { margin: 6px 0 0; color: var(--muted); font-size: .82rem; }
+.count { color: var(--muted); font-size: .9rem; margin-left: auto; }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+thead th { position: sticky; top: 0; background: var(--panel); text-align: right; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: .76rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+thead th:first-child, tbody th { text-align: left; }
+tbody td, tbody th { padding: 12px 14px; border-bottom: 1px solid var(--hair); vertical-align: middle; }
+tbody tr:hover { background: var(--band); }
+tbody th { font-weight: 400; }
+tbody th b { display: block; color: var(--ink); }
+tbody th span { color: var(--muted); font-size: .84rem; }
+td { text-align: right; }
+.close b { color: var(--ink); font-size: 1rem; }
+.close small { display: block; color: var(--muted); font-size: .78rem; }
+.up { color: var(--up); font-weight: 700; } .down { color: var(--down); font-weight: 700; } .flat { color: var(--flat); font-weight: 650; }
+.notrade { display: inline-block; margin-top: 2px; padding: 1px 7px; border-radius: 99px; background: var(--band); color: var(--muted); font-size: .72rem; font-weight: 700; }
+.meter { display: inline-flex; align-items: center; gap: 8px; }
+.meter span.track { width: 64px; height: 6px; border-radius: 99px; background: var(--band); overflow: hidden; }
+.meter span.fill { display: block; height: 100%; background: var(--teal); }
+.more { display: flex; justify-content: center; padding: 14px; }
+.more button { min-height: 44px; padding: 0 20px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); color: var(--ink); font: 650 .92rem var(--sans); cursor: pointer; }
+
+/* bills */
+.bills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.bill { padding: 18px; }
+.bill .v { font-size: 2rem; font-weight: 750; color: var(--ink); }
+.rangebar { position: relative; height: 10px; border-radius: 99px; background: linear-gradient(90deg, var(--teal-soft), var(--amber-soft), var(--coral-soft)); margin: 14px 0 6px; }
+.rangebar i { position: absolute; top: -4px; width: 4px; height: 18px; border-radius: 2px; background: var(--ink); }
+.rangelab { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; }
+
+/* tiles, method, terms */
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.tile { padding: 18px; border-top: 4px solid var(--c, var(--blue)); }
+.tag { display: inline-block; margin-bottom: 8px; padding: 2px 10px; border-radius: 99px; background: var(--cs, var(--blue-soft)); color: var(--c, var(--blue)); font-size: .74rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.tile p { margin: 0; font-size: .95rem; }
+details.acc { padding: 0; margin-bottom: 10px; }
+details.acc summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 12px 18px; font-weight: 700; color: var(--ink); }
+details.acc summary::-webkit-details-marker { display: none; }
+details.acc summary::after { content: "+"; font-size: 1.3rem; color: var(--blue); }
+details.acc[open] summary::after { content: "–"; }
+details.acc .in { padding: 0 18px 16px; }
+details.acc .in p { margin: 0 0 10px; }
+.terms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.term { padding: 16px; }
+.term h3 { font-size: 1rem; }
+.term p { margin: 0 0 6px; font-size: .93rem; }
+.term .ex { color: var(--muted); font-size: .86rem; }
+.bandtbl { width: auto; min-width: 320px; margin: 8px 0; }
+.bandtbl td, .bandtbl th { padding: 8px 14px; border-bottom: 1px solid var(--hair); }
+#sources li { margin-bottom: 4px; } #sources a { display: inline-block; padding: 10px 0; }
+footer { padding: 30px 0 44px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; }
+footer a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 650; }
+
+@media (max-width: 960px) { .kpis, .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .terms { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .mast .shell { flex-wrap: wrap; row-gap: 0; padding-bottom: 4px; }
+  .mast nav { order: 3; width: 100%; margin-left: 0; }
+  .kpis { gap: 10px; } .kpi { padding: 14px; } .kpi .v { font-size: 1.35rem; }
+  .bills, .grid2, .grid4, .terms { grid-template-columns: 1fr; }
+  .chips { display: none; } .sortsel { display: block; flex: 1 1 100%; }
+  .count { margin-left: 0; }
+  thead { display: none; }
+  table, tbody, tr, td, tbody th { display: block; width: 100%; }
+  tbody tr { padding: 12px 14px; border-bottom: 1px solid var(--hair); }
+  tbody th, tbody td { padding: 3px 0; border: 0; }
+  tbody td { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  tbody td::before { content: attr(data-label); color: var(--muted); font-size: .86rem; font-weight: 600; text-align: left; }
+  .close small { display: inline; margin-left: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast"><div class="shell">
+  <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span>GSE Market Intelligence</a>
+  <nav aria-label="Sections"><a href="#market">Market</a><a href="#shares">Shares</a><a href="#bills">Treasury bills</a><a href="#news">News</a><a href="#research">Research</a><a href="#method">Method</a><a href="#terms">Definitions</a></nav>
+  <a class="home" href="https://cofyafriyie.github.io/personal-website/">Afriyie &rarr;</a>
+</div></header>
+
+<main id="main">
+<section class="hero" id="top"><div class="shell" id="market">
+  <div class="kicker">Ghana Stock Exchange &middot; Independent research</div>
+  <h1>The Ghana market, in numbers</h1>
+  <p class="byline">Independent research by <a href="https://cofyafriyie.github.io/personal-website/">Afriyie Kofi Owusu-Ansah</a></p>
+  <div class="stamp" id="stamp"></div>
+  <div class="kpis" id="kpis"></div>
+  <p class="note" role="note"><b>Research, not advice.</b> Public market data with sources and dates, for education. Nothing here recommends buying, selling or holding anything.</p>
+</div></section>
+
+<section class="band" aria-labelledby="ci-h"><div class="shell">
+  <h2 id="ci-h">GSE Composite Index</h2>
+  <p class="sub">Daily close of the exchange's main price index. Hover or tap the chart to read a date; use the arrow keys when it is focused.</p>
+  <div class="card chart">
+    <div class="chart-head">
+      <div class="seg" role="group" aria-label="Chart period"><button type="button" data-p="ytd" aria-pressed="true">YTD</button><button type="button" data-p="1y">1Y</button><button type="button" data-p="3y">3Y</button><button type="button" data-p="max">Max</button></div>
+      <div class="period" id="period" aria-live="polite"></div>
+    </div>
+    <div class="plot"><svg id="chart" viewBox="0 0 1000 320" tabindex="0" role="img" aria-label="GSE Composite Index chart"></svg><div class="tip" id="tip"></div></div>
+    <div class="src" id="ci-src"></div>
+  </div>
+  <div class="card breadth" style="margin-top:14px">
+    <h3>How shares closed on the last trading day</h3>
+    <div class="bar" id="bar" aria-hidden="true"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</div></section>
+
+<section class="band tint" id="shares" aria-labelledby="sh-h"><div class="shell">
+  <h2 id="sh-h">Shares</h2>
+  <p class="sub">Each share's closing price against the session before, its longer-run price change, and how often it actually trades. Most GSE shares do not trade every day: a share with no trade keeps its last price.</p>
+  <div class="tools">
+    <div class="chips" role="group" aria-label="Sort shares">
+      <button type="button" data-s="active" aria-pressed="true">Most traded</button><button type="button" data-s="dayup">Today's biggest rise</button><button type="button" data-s="daydown">Today's biggest fall</button><button type="button" data-s="y1">1-year change</button><button type="button" data-s="az">A&ndash;Z</button>
+    </div>
+    <label class="sr-only" for="sortsel">Sort shares</label>
+    <select class="sortsel" id="sortsel"><option value="active">Sort: most traded</option><option value="dayup">Sort: today's biggest rise</option><option value="daydown">Sort: today's biggest fall</option><option value="y1">Sort: 1-year change</option><option value="az">Sort: A&ndash;Z</option></select>
+    <div class="search"><label class="sr-only" for="q">Search shares</label><input id="q" type="search" placeholder="Search ticker or company" autocomplete="off">
+      <button class="mic" id="mic" type="button" aria-pressed="false" aria-label="Search by voice"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg></button></div>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+  <p class="hint" id="mic-hint" hidden></p>
+  <div class="card">
+    <div class="tablewrap"><table aria-describedby="sh-note">
+      <thead><tr><th scope="col">Share</th><th scope="col">Close (GHS)</th><th scope="col">vs previous close</th><th scope="col">1 year</th><th scope="col">5 years</th><th scope="col">Days traded, 12 months</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+    <div class="more"><button type="button" id="more"></button></div>
+  </div>
+  <p class="src" id="sh-note"></p>
+</div></section>
+
+<section class="band" id="bills" aria-labelledby="tb-h"><div class="shell">
+  <h2 id="tb-h">Treasury bills</h2>
+  <p class="sub">Latest Bank of Ghana auction rates. The bar shows how far that tenor's rate has moved within 12 months in the past (the middle 80% of moves): a planning width, not a forecast.</p>
+  <div class="bills" id="billcards"></div>
+  <p class="src" id="tb-src"></p>
+</div></section>
+
+<section class="band tint" id="news" aria-labelledby="nw-h"><div class="shell">
+  <h2 id="nw-h">News and announcements</h2>
+  <p class="sub">What was announced and reported, each with its source and date. Headlines link to the original. The lab's own study found no type of news that reliably moved prices, so nothing here says a story caused a price change.</p>
+  <div class="tabs" role="tablist" aria-label="News type">
+    <button type="button" role="tab" id="tab-ann" aria-controls="pan-ann" aria-selected="true">Exchange announcements</button>
+    <button type="button" role="tab" id="tab-rep" aria-controls="pan-rep" aria-selected="false" tabindex="-1">News reports</button>
+    <button type="button" role="tab" id="tab-up" aria-controls="pan-up" aria-selected="false" tabindex="-1">Coming up</button>
+  </div>
+  <div class="card" role="tabpanel" id="pan-ann" aria-labelledby="tab-ann"><ul class="feed" id="feed-ann"></ul></div>
+  <div class="card" role="tabpanel" id="pan-rep" aria-labelledby="tab-rep" hidden><ul class="feed" id="feed-rep"></ul></div>
+  <div class="card" role="tabpanel" id="pan-up" aria-labelledby="tab-up" hidden><ul class="feed" id="feed-up"></ul></div>
+  <p class="src" id="nw-src"></p>
+</div></section>
+
+<section class="band" id="research" aria-labelledby="rs-h"><div class="shell">
+  <h2 id="rs-h">What the research found</h2>
+  <p class="sub">Four studies in October 2026, each tested only on data that would have been available at the time.</p>
+  <div class="grid4">
+    <article class="card tile" style="--c:var(--blue);--cs:var(--blue-soft)"><span class="tag">Methods</span><h3>No one predicts a single share reliably</h3><p>In well-known studies and university notes, history-based predictors rarely beat a plain average on new data. Good practice shows a range, not one number.</p></article>
+    <article class="card tile" style="--c:var(--violet);--cs:var(--violet-soft)"><span class="tag">GSE back-test</span><h3>Past returns did not predict the next ones</h3><p>As if at each year-end since 2018: carrying recent returns forward did no better than assuming "no change". One-year outcomes ran from about half to double.</p></article>
+    <article class="card tile" style="--c:var(--coral);--cs:var(--coral-soft)"><span class="tag">News and events</span><h3>No type of news reliably moved prices</h3><p>Against comparison dates, no category of announcement stood out, and many were followed by no trade at all. MTN Ghana's 2018 IPO raised about a third of the shares offered.</p></article>
+    <article class="card tile" style="--c:var(--teal);--cs:var(--teal-soft)"><span class="tag">Treasury bills</span><h3>"Today's rate holds" was hard to beat</h3><p>For 91 to 364-day bills, assuming the latest rate persists beat every alternative tried. Rolled bills still swung, and after inflation sometimes lost value.</p></article>
+  </div>
+</div></section>
+
+<section class="band" id="method" aria-labelledby="me-h"><div class="shell">
+  <h2 id="me-h">Methodology</h2>
+  <p class="sub">How the figures on this page are produced, and what they cannot tell you.</p>
+  <details class="acc card" open><summary>Where the data comes from</summary><div class="in">
+    <p>Share prices, volumes and the indices come from the Ghana Stock Exchange's daily trading data and daily market summary. Treasury-bill rates come from Bank of Ghana auction results. Each figure on this page shows its date; company names come from the companies' own filings and GSE notices.</p>
+    <p>"Close" is the exchange's published closing price. Price changes compare closing prices only: dividends and rights are not added, so they understate what a long-term holder received.</p>
+  </div></details>
+  <details class="acc card"><summary>How bad prices are handled</summary><div class="in">
+    <p>One- to three-day price spikes that immediately reverse are treated as data errors and dropped, never replaced with a guess. A ticker that was split across two spellings is joined. A sudden, lasting jump of almost exactly 2, 3, 5 or more times is treated as a possible unadjusted share split, and no price change is measured across it. Delisted shares are left out.</p>
+  </div></details>
+  <details class="acc card"><summary>How methods are tested (walk-forward)</summary><div class="in">
+    <p>Each method is tested as if it were a past date: only information published by then is used, a forecast is made, and it is compared with what actually happened. This is repeated at every year-end since 2018 and scored against simple benchmarks: "no change", the market average and the treasury-bill rate. A method that cannot beat them is not used.</p>
+  </div></details>
+  <details class="acc card"><summary>Three layers: history, assumption, range</summary><div class="in">
+    <p><b>History</b> is shown as a record and never stretched forward as if it will repeat. Any <b>planning assumption</b> starts from the market's own long-run average, today's treasury-bill rate and a share's own history pulled toward the market. The <b>range</b> is how far outcomes actually strayed from forecasts like this in the back-test: about 8 in 10 outcomes fell inside these bands.</p>
+    <table class="bandtbl" id="bandtbl" aria-label="Measured ranges by horizon"><thead><tr><th scope="col">After</th><th scope="col">Low</th><th scope="col">High</th></tr></thead><tbody></tbody></table>
+    <p>For example, GHS 100 with a planning assumption of "no change" could plausibly end anywhere from about GHS 51 to GHS 194 after one year. Beyond 5 years the bands are an extrapolation.</p>
+  </div></details>
+  <details class="acc card"><summary>Limits</summary><div class="in">
+    <p>About eight years of data and roughly forty listed shares are enough to reject weak methods but not to prove a strong one. Many shares rarely trade, so a price can stay unchanged for weeks without any trading. Figures are nominal (before inflation), before tax and fees. Nothing here is a forecast, a promise or advice.</p>
+  </div></details>
+</div></section>
+
+<section class="band tint" id="terms" aria-labelledby="te-h"><div class="shell">
+  <h2 id="te-h">Definitions</h2>
+  <p class="sub">The words used on this page, in plain language.</p>
+  <div class="terms" id="termgrid"></div>
+</div></section>
+
+<section class="band" aria-labelledby="so-h"><div class="shell">
+  <h2 id="so-h">Sources and dates</h2>
+  <ul id="sources"></ul>
+  <p class="src" id="built"></p>
+</div></section>
+</main>
+
+<footer><div class="shell">
+  <p>Research and education only, not financial advice. No recommendation to buy, sell or hold any security is made or implied. Check prices and rates with the exchange or your bank before acting.</p>
+  <p><a href="https://cofyafriyie.github.io/personal-website/">Back to Afriyie's personal website</a></p>
+</div></footer>
+
+<script id="data" type="application/json">{"generated_utc":"2026-10-23T04:43:10Z","price_as_of":"2026-10-21","tbill_as_of":"2026-09-14","counts":{"active_shares":40,"symbols_in_history":84},"zero_volume_share_12m":40.5,"index":{"date":"2026-10-21","ci":14105.01,"ci_prev":14148.86,"ci_chg_1d":-0.31,"ci_ytd":60.8,"ci_1y":66.6,"fi":7431.65,"fi_prev":7453.14,"fi_chg_1d":-0.29,"market_cap_ghs_m":266525.12,"series":[["2023-07-17",2862.27],["2023-07-18",2861.47],["2023-07-19",2861.29],["2023-07-20",2860.97],["2023-07-21",2870.72],["2023-07-24",2870.72],["2023-07-25",2921.72],["2023-07-26",2932.35],["2023-07-27",2932.76],["2023-07-28",2969.69],["2023-07-31",2976.77],["2023-08-01",3122.86],["2023-08-02",3122.86],["2023-08-03",3127.43],["2023-08-07",3115.25],["2023-08-08",3103.08],["2023-08-09",3105.52],["2023-08-10",3105.52],["2023-08-11",3050.73],["2023-08-14",2710.06],["2023-08-15",3058.98],["2023-08-16",3061.81],["2023-08-17",3066.2],["2023-08-18",3061.68],["2023-08-21",3061.8],["2023-08-22",3064.4],["2023-08-23",3062.02],["2023-08-24",3049.56],["2023-08-25",3069.32],["2023-08-28",3069.03],["2023-08-29",3074.26],["2023-08-30",3099.49],["2023-08-31",3084.79],["2023-09-01",3051.37],["2023-09-04",3052.08],["2023-09-05",3053.68],["2023-09-06",3064.23],["2023-09-07",3069.8],["2023-09-08",3071.83],["2023-09-11",3095.4],["2023-09-12",3111.01],["2023-09-13",3113.79],["2023-09-14",3148.47],["2023-09-15",3158.79],["2023-09-18",3159.77],["2023-09-19",3165.0],["2023-09-20",3168.35],["2023-09-22",3168.24],["2023-09-25",3166.51],["2023-09-26",3166.04],["2023-09-27",3166.42],["2023-09-28",3172.35],["2023-09-29",3172.35],["2023-10-02",3160.18],["2023-10-03",3172.93],["2023-10-04",3135.3],["2023-10-05",3137.03],["2023-10-06",3139.99],["2023-10-09",3136.86],["2023-10-10",3141.66],["2023-10-11",3141.18],["2023-10-12",3141.18],["2023-10-13",3145.33],["2023-10-16",3145.09],["2023-10-17",3144.44],["2023-10-18",3120.12],["2023-10-19",3126.05],["2023-10-20",3126.05],["2023-10-23",3126.05],["2023-10-24",3131.99],["2023-10-25",3131.99],["2023-10-26",3134.93],["2023-10-27",3125.72],["2023-10-30",3125.72],["2023-10-31",3125.62],["2023-11-01",3128.5],["2023-11-02",3131.47],["2023-11-03",3137.4],["2023-11-06",3149.37],["2023-11-07",3134.89],["2023-11-08",3147.07],["2023-11-09",3195.46],["2023-11-10",3195.46],["2023-11-13",3195.46],["2023-11-14",3195.46],["2023-11-15",3195.46],["2023-11-16",3195.46],["2023-11-17",3195.57],["2023-11-20",3195.57],["2023-11-21",3195.57],["2023-11-22",3195.57],["2023-11-23",3195.62],["2023-11-24",3195.62],["2023-11-27",3171.7],["2023-11-28",3171.7],["2023-11-29",3169.9],["2023-11-30",3169.9],["2023-12-04",3149.13],["2023-12-05",3148.82],["2023-12-06",3146.44],["2023-12-07",3128.8],["2023-12-08",3130.6],["2023-12-11",3130.6],["2023-12-12",3130.6],["2023-12-13",3130.6],["2023-12-14",3124.88],["2023-12-15",3063.44],["2023-12-18",3063.44],["2023-12-19",3069.26],["2023-12-20",3129.56],["2023-12-21",3130.23],["2023-12-22",3130.23],["2023-12-27",3130.23],["2023-12-28",3130.23],["2023-12-29",3130.23],["2024-01-02",3130.23],["2024-01-03",3130.23],["2024-01-04",3128.92],["2024-01-05",3128.86],["2024-01-09",3128.86],["2024-01-10",3128.17],["2024-01-11",3128.47],["2024-01-12",3127.31],["2024-01-15",3126.74],["2024-01-16",3126.74],["2024-01-17",3144.0],["2024-01-18",3144.0],["2024-01-19",3154.48],["2024-01-22",3161.36],["2024-01-23",3172.67],["2024-01-24",3172.67],["2024-01-25",3172.43],["2024-01-26",3172.43],["2024-01-29",3172.43],["2024-01-30",3172.43],["2024-01-31",3172.43],["2024-02-01",3172.43],["2024-02-02",3172.43],["2024-02-05",3178.69],["2024-02-06",3177.54],["2024-02-07",3177.54],["2024-02-08",3177.76],["2024-02-09",3177.76],["2024-02-12",3177.53],["2024-02-13",3177.5],["2024-02-14",3177.5],["2024-02-15",3178.65],["2024-02-16",3185.57],["2024-02-19",3191.17],["2024-02-20",3191.4],["2024-02-21",3191.4],["2024-02-22",3184.64],["2024-02-23",3185.18],["2024-02-26",3185.18],["2024-02-27",3190.22],["2024-02-28",3215.68],["2024-02-29",3227.85],["2024-03-01",3278.04],["2024-03-04",3302.38],["2024-03-05",3305.35],["2024-03-07",3305.35],["2024-03-08",3341.88],["2024-03-11",3354.54],["2024-03-12",3351.04],["2024-03-13",3349.78],["2024-03-14",3351.21],["2024-03-15",3355.93],["2024-03-18",3416.22],["2024-03-19",3428.4],["2024-03-20",3440.57],["2024-03-21",3538.21],["2024-03-22",3537.79],["2024-03-25",3537.21],["2024-03-26",3476.45],["2024-03-27",3456.2],["2024-03-28",3456.2],["2024-04-02",3461.81],["2024-04-03",3464.13],["2024-04-04",3464.13],["2024-04-05",3451.96],["2024-04-08",3439.21],["2024-04-09",3439.21],["2024-04-10",3439.21],["2024-04-12",3441.65],["2024-04-15",3504.23],["2024-04-16",3504.34],["2024-04-17",3504.34],["2024-04-18",3504.34],["2024-04-19",3504.34],["2024-04-22",3504.34],["2024-04-23",3504.34],["2024-04-24",3504.34],["2024-04-25",3503.76],["2024-04-26",3504.25],["2024-04-29",3553.17],["2024-04-30",3687.09],["2024-05-02",3686.93],["2024-05-03",3650.41],["2024-05-06",3648.5],["2024-05-07",3648.5],["2024-05-08",3648.5],["2024-05-09",3648.5],["2024-05-10",3646.54],["2024-05-13",3683.48],["2024-05-14",3744.35],["2024-05-15",3744.35],["2024-05-16",3732.91],["2024-05-17",3744.97],["2024-05-20",3744.97],["2024-05-21",3744.97],["2024-05-22",3751.07],["2024-05-23",3751.07],["2024-05-24",3751.07],["2024-05-27",3751.1],["2024-05-28",3751.72],["2024-05-29",3752.23],["2024-05-30",3753.69],["2024-05-31",3753.69],["2024-06-03",3757.59],["2024-06-04",3764.3],["2024-06-05",3772.1],["2024-06-06",3772.1],["2024-06-07",3772.1],["2024-06-10",3772.23],["2024-06-11",3773.52],["2024-06-12",3773.52],["2024-06-13",3773.52],["2024-06-14",3767.27],["2024-06-18",3769.3],["2024-06-19",3776.2],["2024-06-20",3788.84],["2024-06-21",3788.84],["2024-06-24",3798.01],["2024-06-25",3798.01],["2024-06-26",3829.58],["2024-06-27",3829.61],["2024-06-28",3829.61],["2024-07-01",3829.61],["2024-07-02",3878.31],["2024-07-03",3883.24],["2024-07-04",3895.42],["2024-07-05",3950.49],["2024-07-08",3947.36],["2024-07-09",3945.8],["2024-07-10",3956.81],["2024-07-11",3958.86],["2024-07-12",4086.54],["2024-07-15",4086.54],["2024-07-16",4085.76],["2024-07-17",4195.72],["2024-07-18",4195.72],["2024-07-19",4320.07],["2024-07-22",4356.46],["2024-07-23",4380.63],["2024-07-24",4405.2],["2024-07-25",4465.14],["2024-07-26",4490.18],["2024-07-29",4490.18],["2024-07-30",4490.8],["2024-07-31",4493.92],["2024-08-01",4603.16],["2024-08-02",4586.28],["2024-08-06",4513.5],["2024-08-07",4452.88],["2024-08-08",4440.74],["2024-08-09",4440.78],["2024-08-12",4453.74],["2024-08-13",4457.93],["2024-08-14",4457.93],["2024-08-15",4462.45],["2024-08-16",4440.53],["2024-08-19",4404.32],["2024-08-20",4353.38],["2024-08-21",4353.38],["2024-08-22",4353.38],["2024-08-23",4353.38],["2024-08-26",4353.38],["2024-08-27",4353.38],["2024-08-28",4353.79],["2024-08-29",4353.79],["2024-08-30",4359.85],["2024-09-02",4348.0],["2024-09-03",4348.0],["2024-09-04",4348.0],["2024-09-05",4348.0],["2024-09-06",4337.92],["2024-09-09",4337.17],["2024-09-10",4337.17],["2024-09-11",4361.44],["2024-09-12",4362.07],["2024-09-13",4373.03],["2024-09-16",4494.34],["2024-09-17",4503.17],["2024-09-18",4442.52],["2024-09-19",4381.86],["2024-09-20",4381.86],["2024-09-24",4406.56],["2024-09-25",4406.56],["2024-09-26",4395.9],["2024-09-27",4380.1],["2024-09-30",4369.44],["2024-10-01",4369.44],["2024-10-02",4375.49],["2024-10-03",4364.83],["2024-10-04",4364.83],["2024-10-07",4354.16],["2024-10-08",4354.16],["2024-10-09",4354.16],["2024-10-10",4343.5],["2024-10-11",4346.7],["2024-10-14",4347.47],["2024-10-15",4347.47],["2024-10-16",4347.47],["2024-10-17",4347.47],["2024-10-18",4347.47],["2024-10-21",4358.13],["2024-10-22",4360.51],["2024-10-23",4368.8],["2024-10-24",4368.8],["2024-10-25",4369.03],["2024-10-28",4369.03],["2024-10-29",4316.7],["2024-10-30",4326.74],["2024-10-31",4385.94],["2024-11-01",4529.3],["2024-11-04",4542.03],["2024-11-05",4556.76],["2024-11-06",4557.63],["2024-11-07",4610.96],["2024-11-08",4629.1],["2024-11-11",4611.66],["2024-11-12",4617.91],["2024-11-13",4616.17],["2024-11-14",4648.16],["2024-11-18",4653.69],["2024-11-19",4653.69],["2024-11-20",4654.43],["2024-11-21",4654.69],["2024-11-22",4665.35],["2024-11-25",4677.65],["2024-11-26",4677.65],["2024-11-27",4694.37],["2024-11-28",4694.37],["2024-11-29",4694.37],["2024-12-02",4694.37],["2024-12-03",4705.04],["2024-12-04",4726.37],["2024-12-05",4738.49],["2024-12-09",4706.49],["2024-12-10",4706.8],["2024-12-11",4708.05],["2024-12-12",4722.95],["2024-12-13",4733.62],["2024-12-16",4733.62],["2024-12-17",4808.27],["2024-12-18",4809.63],["2024-12-19",4810.08],["2024-12-20",4854.04],["2024-12-23",4888.53],["2024-12-24",4888.53],["2024-12-27",4888.53],["2024-12-30",4888.53],["2024-12-31",4888.53],["2025-01-02",4888.53],["2025-01-03",4890.27],["2025-01-06",4890.27],["2025-01-08",4900.94],["2025-01-09",4900.94],["2025-01-10",4902.87],["2025-01-13",4945.54],["2025-01-14",4999.72],["2025-01-15",5002.17],["2025-01-16",5055.49],["2025-01-17",5057.2],["2025-01-20",5057.2],["2025-01-21",5057.75],["2025-01-22",5075.92],["2025-01-23",5075.92],["2025-01-24",5076.55],["2025-01-27",5083.84],["2025-01-28",5149.28],["2025-01-29",5151.76],["2025-01-30",5227.7],["2025-01-31",5229.44],["2025-02-03",5227.53],["2025-02-04",5220.77],["2025-02-05",5232.89],["2025-02-06",5232.89],["2025-02-07",5245.36],["2025-02-10",5267.19],["2025-02-11",5277.85],["2025-02-12",5277.85],["2025-02-13",5296.34],["2025-02-14",5351.34],["2025-02-17",5369.51],["2025-02-18",5412.62],["2025-02-19",5510.82],["2025-02-20",5470.42],["2025-02-21",5564.47],["2025-02-24",5598.46],["2025-02-25",5622.92],["2025-02-26",5622.92],["2025-02-27",5647.03],["2025-02-28",5659.76],["2025-03-03",5769.29],["2025-03-04",5909.31],["2025-03-05",6011.41],["2025-03-07",6037.85],["2025-03-10",6054.8],["2025-03-11",6062.2],["2025-03-12",6043.39],["2025-03-13",6045.42],["2025-03-14",6109.28],["2025-03-17",6138.28],["2025-03-18",6154.92],["2025-03-19",6154.92],["2025-03-20",6160.07],["2025-03-21",6180.14],["2025-03-24",6126.08],["2025-03-25",6063.76],["2025-03-26",6218.93],["2025-03-27",6230.22],["2025-03-28",6217.9],["2025-04-02",6041.63],["2025-04-03",6065.93],["2025-04-04",6097.08],["2025-04-07",6100.08],["2025-04-08",6101.34],["2025-04-09",6099.6],["2025-04-10",6099.6],["2025-04-11",6100.93],["2025-04-14",6025.4],["2025-04-15",6025.4],["2025-04-16",6041.88],["2025-04-17",6042.29],["2025-04-22",6052.53],["2025-04-23",6058.28],["2025-04-24",6061.59],["2025-04-25",6061.74],["2025-04-28",6065.1],["2025-04-29",6065.1],["2025-04-30",6095.57],["2025-05-02",6214.34],["2025-05-05",6288.99],["2025-05-06",6311.45],["2025-05-07",6396.77],["2025-05-08",6417.54],["2025-05-09",6418.09],["2025-05-12",6434.63],["2025-05-13",6455.96],["2025-05-14",6607.59],["2025-05-15",6683.53],["2025-05-16",6707.64],["2025-05-19",6699.04],["2025-05-20",6520.59],["2025-05-21",6433.71],["2025-05-22",6385.3],["2025-05-23",6353.54],["2025-05-26",6344.23],["2025-05-27",6215.71],["2025-05-28",6152.98],["2025-05-29",6175.87],["2025-05-30",6150.31],["2025-06-02",6037.66],["2025-06-03",6012.29],["2025-06-04",5989.15],["2025-06-05",6004.72],["2025-06-09",6004.72],["2025-06-10",6036.32],["2025-06-11",6077.94],["2025-06-12",6072.02],["2025-06-13",6174.03],["2025-06-16",6227.74],["2025-06-17",6176.29],["2025-06-18",6230.47],["2025-06-19",6192.61],["2025-06-20",6210.28],["2025-06-23",6250.15],["2025-06-24",6255.41],["2025-06-25",6245.66],["2025-06-26",6245.66],["2025-06-27",6248.48],["2025-06-30",6248.48],["2025-07-01",6246.35],["2025-07-02",6246.35],["2025-07-03",6347.47],["2025-07-07",6416.45],["2025-07-08",6417.58],["2025-07-09",6411.72],["2025-07-10",6414.88],["2025-07-11",6424.9],["2025-07-14",6435.51],["2025-07-15",6450.5],["2025-07-16",6448.12],["2025-07-17",6437.46],["2025-07-18",6386.76],["2025-07-21",6437.68],["2025-07-22",6436.54],["2025-07-23",6436.54],["2025-07-24",6555.72],["2025-07-25",6673.11],["2025-07-28",6644.69],["2025-07-29",6670.27],["2025-07-30",6776.09],["2025-07-31",6992.29],["2025-08-01",6994.45],["2025-08-04",7005.69],["2025-08-05",7040.46],["2025-08-06",7162.2],["2025-08-07",7323.35],["2025-08-08",7386.41],["2025-08-11",7411.94],["2025-08-12",7411.94],["2025-08-13",7443.29],["2025-08-14",7401.5],["2025-08-15",7412.59],["2025-08-18",7416.03],["2025-08-19",7416.16],["2025-08-20",7303.81],["2025-08-21",7336.7],["2025-08-22",7346.69],["2025-08-25",7348.65],["2025-08-26",7335.76],["2025-08-27",7339.02],["2025-08-28",7340.08],["2025-08-29",7330.37],["2025-09-01",7330.37],["2025-09-02",7310.17],["2025-09-03",7320.21],["2025-09-04",7321.59],["2025-09-05",7172.44],["2025-09-08",7172.44],["2025-09-09",7172.44],["2025-09-10",7196.64],["2025-09-11",7196.58],["2025-09-12",7269.4],["2025-09-15",7316.08],["2025-09-16",7465.99],["2025-09-17",7596.49],["2025-09-18",7672.81],["2025-09-19",7779.15],["2025-09-23",7800.7],["2025-09-24",7829.09],["2025-09-25",8046.69],["2025-09-26",8120.0],["2025-09-29",8161.85],["2025-09-30",8168.35],["2025-10-01",8330.55],["2025-10-02",8365.89],["2025-10-03",8410.56],["2025-10-06",8422.19],["2025-10-07",8443.88],["2025-10-08",8484.39],["2025-10-09",8497.43],["2025-10-10",8488.81],["2025-10-13",8481.39],["2025-10-14",8495.76],["2025-10-15",8501.99],["2025-10-16",8489.75],["2025-10-17",8495.93],["2025-10-20",8490.2],["2025-10-21",8468.44],["2025-10-22",8447.64],["2025-10-23",8378.59],["2025-10-24",8367.12],["2025-10-27",8379.0],["2025-10-28",8351.36],["2025-10-29",8345.01],["2025-10-30",8341.87],["2025-10-31",8385.35],["2025-11-03",8369.81],["2025-11-04",8284.0],["2025-11-05",8282.26],["2025-11-06",8227.84],["2025-11-07",8229.16],["2025-11-10",8172.3],["2025-11-11",8170.59],["2025-11-12",8173.66],["2025-11-13",8196.71],["2025-11-14",8411.88],["2025-11-17",8414.15],["2025-11-18",8420.94],["2025-11-19",8423.35],["2025-11-20",8496.86],["2025-11-21",8521.02],["2025-11-24",8558.6],["2025-11-25",8587.31],["2025-11-26",8610.88],["2025-11-27",8584.17],["2025-11-28",8610.15],["2025-12-01",8610.7],["2025-12-02",8611.87],["2025-12-03",8599.03],["2025-12-04",8622.64],["2025-12-08",8630.5],["2025-12-09",8628.21],["2025-12-10",8634.75],["2025-12-11",8634.75],["2025-12-12",8679.19],["2025-12-15",8678.04],["2025-12-16",8706.79],["2025-12-17",8721.73],["2025-12-18",8745.74],["2025-12-19",8755.59],["2025-12-22",8759.11],["2025-12-23",8751.66],["2025-12-24",8755.97],["2025-12-29",8757.11],["2025-12-30",8763.68],["2025-12-31",8770.25],["2026-01-02",8770.25],["2026-01-05",8781.55],["2026-01-06",8765.44],["2026-01-07",8797.32],["2026-01-08",8807.5],["2026-01-12",8828.04],["2026-01-13",8829.57],["2026-01-14",8832.96],["2026-01-15",8859.08],["2026-01-16",8811.11],["2026-01-19",8811.42],["2026-01-20",8818.99],["2026-01-21",8925.23],["2026-01-22",8969.81],["2026-01-23",8976.64],["2026-01-26",8980.95],["2026-01-27",8984.17],["2026-01-28",8997.05],["2026-01-29",9001.57],["2026-01-30",9006.51],["2026-02-02",9000.47],["2026-02-03",9007.04],["2026-02-04",9023.61],["2026-02-05",9051.33],["2026-02-06",9152.65],["2026-02-09",9171.75],["2026-02-10",9349.89],["2026-02-11",9446.87],["2026-02-12",9689.99],["2026-02-13",10260.79],["2026-02-16",10530.31],["2026-02-17",11135.13],["2026-02-18",11341.56],["2026-02-19",11384.7],["2026-02-20",11805.68],["2026-02-23",12004.09],["2026-02-24",12176.92],["2026-02-25",12259.53],["2026-02-26",12534.31],["2026-02-27",12869.2],["2026-03-02",13350.54],["2026-03-03",13734.54],["2026-03-04",14005.32],["2026-03-05",14273.08],["2026-03-09",14587.17],["2026-03-10",15185.49],["2026-03-11",15401.68],["2026-03-12",15524.99],["2026-03-13",15611.32],["2026-03-16",15844.87],["2026-03-17",15868.11],["2026-03-18",15908.77],["2026-03-19",15691.69],["2026-03-24",15316.66],["2026-03-25",14440.81],["2026-03-26",13556.32],["2026-03-27",12989.79],["2026-03-30",13095.56],["2026-03-31",13060.13],["2026-04-01",12917.08],["2026-04-02",13040.78],["2026-04-07",13081.19],["2026-04-08",13126.11],["2026-04-09",13106.52],["2026-04-10",13149.1],["2026-04-13",13155.48],["2026-04-14",13270.23],["2026-04-15",13530.25],["2026-04-16",13667.02],["2026-04-17",14024.22],["2026-04-20",14332.79],["2026-04-21",14489.62],["2026-04-22",14762.45],["2026-04-23",14934.57],["2026-04-24",14873.11],["2026-04-27",14854.38],["2026-04-28",14878.21],["2026-04-29",15098.22],["2026-04-30",15130.52],["2026-05-04",15113.9],["2026-05-06",15053.0],["2026-05-07",14887.92],["2026-05-08",14567.57],["2026-05-11",14616.05],["2026-05-12",14520.97],["2026-05-13",14352.08],["2026-05-14",14332.97],["2026-05-15",14320.45],["2026-05-18",14321.7],["2026-05-19",14344.87],["2026-05-20",14489.47],["2026-05-21",14489.47],["2026-05-22",14518.96],["2026-05-25",14542.48],["2026-05-26",14379.41],["2026-05-28",14379.41],["2026-05-29",14354.14],["2026-06-01",14402.0],["2026-06-02",14430.05],["2026-06-03",14477.4],["2026-06-04",14358.03],["2026-06-05",14299.32],["2026-06-08",14232.99],["2026-06-09",14278.49],["2026-06-10",14351.19],["2026-06-11",14398.93],["2026-06-12",14442.02],["2026-06-15",14601.6],["2026-06-16",14640.88],["2026-06-17",14605.55],["2026-06-18",14708.07],["2026-06-19",14769.27],["2026-06-22",14750.69],["2026-06-23",14867.3],["2026-06-24",14841.24],["2026-06-25",14744.72],["2026-06-26",14766.82],["2026-06-29",14723.45],["2026-06-30",14724.26],["2026-07-01",14577.13],["2026-07-02",14689.01],["2026-07-06",14707.14],["2026-07-07",14712.0],["2026-07-08",14749.24],["2026-07-09",14780.79],["2026-07-10",14805.95],["2026-07-13",14763.86],["2026-07-14",14802.7],["2026-07-15",14857.02],["2026-07-16",14896.64],["2026-07-17",14937.92],["2026-07-20",14931.71],["2026-07-21",15079.27],["2026-07-22",15118.75],["2026-07-23",15266.56],["2026-07-24",15330.57],["2026-07-27",15388.66],["2026-07-28",15381.62],["2026-07-29",15381.05],["2026-07-30",15453.17],["2026-07-31",15434.87],["2026-08-03",15362.52],["2026-08-04",15386.98],["2026-08-05",15220.32],["2026-08-06",15198.53],["2026-08-07",15187.47],["2026-08-10",15225.56],["2026-08-11",15296.06],["2026-08-12",15275.16],["2026-08-13",15279.24],["2026-08-14",15307.71],["2026-08-17",15202.93],["2026-08-18",15206.41],["2026-08-19",15170.27],["2026-08-20",15065.05],["2026-08-21",15136.72],["2026-08-24",15047.54],["2026-08-25",15021.03],["2026-08-26",15088.31],["2026-08-27",14999.64],["2026-08-28",15020.41],["2026-08-31",15076.25],["2026-09-01",14950.61],["2026-09-02",14886.41],["2026-09-03",14759.87],["2026-09-04",14814.08],["2026-09-07",14781.68],["2026-09-08",14836.37],["2026-09-09",14752.21],["2026-09-10",14689.89],["2026-09-11",14611.15],["2026-09-14",14621.4],["2026-09-15",14353.16],["2026-09-16",14161.94],["2026-09-17",14088.52],["2026-09-18",14309.49],["2026-09-22",14285.9],["2026-09-23",14287.14],["2026-09-24",14215.45],["2026-09-25",13886.74],["2026-09-28",14158.56],["2026-09-29",14117.62],["2026-09-30",14141.56],["2026-10-01",14051.2],["2026-10-02",14071.44],["2026-10-05",14116.56],["2026-10-06",14221.2],["2026-10-07",13960.7],["2026-10-08",14024.18],["2026-10-09",14053.48],["2026-10-12",14403.6],["2026-10-13",14383.28],["2026-10-14",14368.2],["2026-10-15",14167.0],["2026-10-16",14394.77],["2026-10-19",14163.93],["2026-10-20",14148.86],["2026-10-21",14105.01]]},"shares":[{"symbol":"ALW","name":"Aluworks Plc","price":0.1,"prev_close":0.1,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2023-01-09","chg_1y":0.0,"chg_5y":null,"traded_share_12m":0.4},{"symbol":"AADS","name":null,"price":0.46,"prev_close":0.46,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":9.5,"chg_5y":12.2,"traded_share_12m":3.7},{"symbol":"ACCESS","name":"Access Bank Ghana Plc","price":20.79,"prev_close":20.79,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2016-12-28","chg_1y":28.3,"chg_5y":495.7,"traded_share_12m":86.9},{"symbol":"ADB","name":"Agricultural Development Bank PLC","price":5.3,"prev_close":5.3,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2016-12-12","chg_1y":4.7,"chg_5y":4.7,"traded_share_12m":42.4},{"symbol":"AGA","name":"AngloGold Ashanti plc","price":37.0,"prev_close":37.0,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":0.0,"chg_5y":0.0,"traded_share_12m":0.8},{"symbol":"ALLGH","name":"Atlantic Lithium Limited","price":5.3,"prev_close":5.3,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2024-02-12","chg_1y":-13.4,"chg_5y":null,"traded_share_12m":84.5},{"symbol":"ASG","name":"Asante Gold Corporation","price":8.89,"prev_close":8.89,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2022-06-29","chg_1y":0.0,"chg_5y":null,"traded_share_12m":33.6},{"symbol":"BOPP","name":"Benso Oil Palm Plantation PLC","price":70.0,"prev_close":70.0,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":79.5,"chg_5y":1650.0,"traded_share_12m":74.4},{"symbol":"CAL","name":"CalBank PLC","price":0.73,"prev_close":0.73,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":-18.9,"chg_5y":-3.9,"traded_share_12m":99.2},{"symbol":"CLYD","name":"Clydestone (Ghana) PLC","price":4.0,"prev_close":4.0,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":2005.3,"chg_5y":13233.3,"traded_share_12m":58.9},{"symbol":"CMLT","name":"Camelot Ghana PLC","price":0.14,"prev_close":0.14,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":0.0,"chg_5y":27.3,"traded_share_12m":1.6},{"symbol":"CPC","name":"Cocoa Processing Company PLC","price":0.38,"prev_close":0.38,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":850.0,"chg_5y":1800.0,"traded_share_12m":21.1},{"symbol":"DASPHARMA","name":"Dannex Ayrton Starwin PLC","price":0.96,"prev_close":0.96,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2020-01-15","chg_1y":152.6,"chg_5y":140.0,"traded_share_12m":51.0},{"symbol":"DIGICUT","name":"Digicut Production & Advertising PLC","price":0.44,"prev_close":0.47,"chg_1d":-6.38,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2018-04-11","chg_1y":388.9,"chg_5y":388.9,"traded_share_12m":24.4},{"symbol":"EGH","name":"Ecobank Ghana PLC","price":39.53,"prev_close":39.53,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2016-04-01","chg_1y":182.4,"chg_5y":406.1,"traded_share_12m":89.8},{"symbol":"EGL","name":"Enterprise Group PLC","price":8.5,"prev_close":8.5,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2010-11-18","chg_1y":150.0,"chg_5y":240.0,"traded_share_12m":86.1},{"symbol":"ETI","name":"Ecobank Transnational Incorporated","price":1.5,"prev_close":1.53,"chg_1d":-1.96,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2008-06-09","chg_1y":50.0,"chg_5y":1775.0,"traded_share_12m":99.6},{"symbol":"FAB","name":"First Atlantic Bank PLC","price":8.4,"prev_close":8.4,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2025-12-19","chg_1y":null,"chg_5y":null,"traded_share_12m":21.1},{"symbol":"FML","name":"Fan Milk Plc","price":14.0,"prev_close":14.0,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2011-01-04","chg_1y":75.2,"chg_5y":180.0,"traded_share_12m":98.0},{"symbol":"GCB","name":"GCB Bank PLC","price":40.0,"prev_close":40.0,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":156.4,"chg_5y":644.9,"traded_share_12m":98.8},{"symbol":"GGBL","name":"Guinness Ghana Breweries PLC","price":10.7,"prev_close":10.7,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":62.1,"chg_5y":491.2,"traded_share_12m":87.3},{"symbol":"GLD","name":"NewGold Issuer (RF) Limited","price":462.37,"prev_close":462.37,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2012-08-22","chg_1y":3.3,"chg_5y":343.5,"traded_share_12m":90.6},{"symbol":"GOIL","name":"GOIL PLC","price":5.74,"prev_close":5.74,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2007-11-16","chg_1y":134.3,"chg_5y":237.6,"traded_share_12m":87.7},{"symbol":"HORDS","name":"HORDS PLC","price":0.82,"prev_close":0.82,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2015-08-11","chg_1y":720.0,"chg_5y":720.0,"traded_share_12m":50.6},{"symbol":"IIL","name":"Intravenous Infusions PLC","price":0.58,"prev_close":0.59,"chg_1d":-1.69,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2015-12-15","chg_1y":1060.0,"chg_5y":1060.0,"traded_share_12m":50.4},{"symbol":"KASA","name":"Kasapreko PLC","price":1.82,"prev_close":1.88,"chg_1d":-3.19,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2026-06-15","chg_1y":null,"chg_5y":null,"traded_share_12m":100.0},{"symbol":"MAC","name":"Mega African Capital Limited","price":5.2,"prev_close":5.2,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2014-04-23","chg_1y":-3.3,"chg_5y":-3.5,"traded_share_12m":40.2},{"symbol":"MMH","name":"Meridian Marshalls Holdings Limited","price":0.14,"prev_close":0.14,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2015-07-07","chg_1y":40.0,"chg_5y":27.3,"traded_share_12m":18.2},{"symbol":"MTNGH","name":"Scancom PLC (MTN Ghana)","price":6.51,"prev_close":6.52,"chg_1d":-0.15,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2018-09-05","chg_1y":49.3,"chg_5y":442.5,"traded_share_12m":100.0},{"symbol":"PBC","name":"PBC Limited (Produce Buying Company Ltd.)","price":0.02,"prev_close":0.02,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2023-01-09","chg_1y":0.0,"chg_5y":null,"traded_share_12m":0.0},{"symbol":"RBGH","name":"Republic Bank (Ghana) PLC","price":4.09,"prev_close":4.09,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2018-04-25","chg_1y":227.2,"chg_5y":686.5,"traded_share_12m":93.1},{"symbol":"SAMBA","name":"Samba Foods Ltd","price":0.55,"prev_close":0.55,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2015-05-12","chg_1y":0.0,"chg_5y":0.0,"traded_share_12m":1.2},{"symbol":"SCB","name":"Standard Chartered Bank Ghana PLC","price":69.87,"prev_close":69.87,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2012-11-09","chg_1y":140.9,"chg_5y":243.3,"traded_share_12m":75.6},{"symbol":"SCBPREF","name":null,"price":0.99,"prev_close":0.99,"chg_1d":0.0,"traded_last_session":false,"price_date":"2026-10-21","first_price_date":"2009-10-22","chg_1y":10.0,"chg_5y":null,"traded_share_12m":2.8},{"symbol":"SIC","name":"SIC Insurance PLC","price":4.94,"prev_close":4.89,"chg_1d":1.02,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2008-01-25","chg_1y":311.7,"chg_5y":6957.1,"traded_share_12m":98.8},{"symbol":"SOGEGH","name":"Societe Generale Ghana PLC","price":5.07,"prev_close":5.06,"chg_1d":0.2,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2013-07-03","chg_1y":110.4,"chg_5y":322.5,"traded_share_12m":96.7},{"symbol":"TLW","name":"Tullow Oil plc","price":13.11,"prev_close":13.11,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2011-07-27","chg_1y":10.0,"chg_5y":10.0,"traded_share_12m":64.2},{"symbol":"TOTAL","name":"TotalEnergies Marketing Ghana PLC","price":41.0,"prev_close":41.0,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2013-08-12","chg_1y":1.2,"chg_5y":718.4,"traded_share_12m":97.5},{"symbol":"UNIL","name":"Unilever Ghana PLC","price":39.5,"prev_close":39.5,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2007-06-25","chg_1y":99.5,"chg_5y":569.5,"traded_share_12m":95.9},{"symbol":"ZEN","name":"ZEN Petroleum Holdings PLC","price":9.01,"prev_close":9.01,"chg_1d":0.0,"traded_last_session":true,"price_date":"2026-10-21","first_price_date":"2026-04-22","chg_1y":null,"chg_5y":null,"traded_share_12m":92.9}],"tbills":[{"tenor_days":91,"rate_pct":4.695,"as_of":"2026-09-14","base_annual_pct":4.8,"low_rate_pct":0.0,"high_rate_pct":12.5},{"tenor_days":182,"rate_pct":6.511,"as_of":"2026-09-14","base_annual_pct":6.6,"low_rate_pct":0.0,"high_rate_pct":15.9},{"tenor_days":364,"rate_pct":10.102,"as_of":"2026-09-14","base_annual_pct":10.1,"low_rate_pct":0.0,"high_rate_pct":18.1}],"news":{"announcements":[{"title":"PR-411 GOIL PLC UNAUDITED FINANCIAL STATEMENTS FOR THE QUARTER ENDED 30 SEPTEMBER 2026","url":"https://gse.com.gh/pressrelease/pr-411-goil-plc-unaudited-financial-statements-for-the-quarter-ended-30-september-2026/","seen":"2026-10-22"},{"title":"PR-410 BAYPORT SAVINGS AND LOANS PLC UNAUDITED FINANCIAL STATEMENTS FOR THE NINE MONTHS ENDED 30 SEPTEMBER 2026(1)","url":"https://gse.com.gh/pressrelease/pr-410-bayport-savings-and-loans-plc-unaudited-financial-statements-for-the-nine-months-ended-30-september-20261/","seen":"2026-10-22"},{"title":"PR-409 SOCIETE GENERALE GHANA PLC UNAUDITED FINANCIAL STATEMENTS FOR THE QUARTER ENDED 30 SEPTEMBER 2026","url":"https://gse.com.gh/pressrelease/pr-409-societe-generale-ghana-plc-unaudited-financial-statements-for-the-quarter-ended-30-september-2026/","seen":"2026-10-21"},{"title":"PR-408 REPUBLIC BANK GHANA PLC LEADERSHIP CHANGES REPUBLIC FINANCIAL HOLDINGS LIMITED (RFHL) AND REPUBLIC BANK LIMITED (RBL)","url":"https://gse.com.gh/pressrelease/pr-408-republic-bank-ghana-plc-leadership-changes-republic-financial-holdings-limited-rfhl-and-republic-bank-limited-rbl/","seen":"2026-10-19"},{"title":"PR-407 NEWGOLD ISSUER (RF) LIMITED UNAUDITED FINANCIAL STATEMENTS FOR THE PERIOD ENDED 30 SEPTEMBER 2026","url":"https://gse.com.gh/pressrelease/pr-407-newgold-issuer-rf-limited-unaudited-financial-statements-for-the-period-ended-30-september-2026/","seen":"2026-10-19"},{"title":"PR-406 ACCESS BANK PLC FINAL DIVIDEND","url":"https://gse.com.gh/pressrelease/pr-406-access-bank-plc-final-dividend/","seen":"2026-10-16"},{"title":"PR-405 CALBANK PLC UNAUDITED CONSOLIDATED FINANCIAL STATEMENTS FOR THE NINE MONTHS PERIOD ENDED 30 SEPTEMBER 2026","url":"https://gse.com.gh/pressrelease/pr-405-calbank-plc-unaudited-consolidated-financial-statements-for-the-nine-months-period-ended-30-september-2026/","seen":"2026-10-14"},{"title":"PR-404 MEGA AFRICAN CAPITAL LIMITED UNAUDITED FINANCIAL STATEMENTS FOR THE PERIOD ENDED 31ST MARCH 2026","url":"https://gse.com.gh/pressrelease/pr-404-mega-african-capital-limited-unaudited-financial-statements-for-the-period-ended-31st-march-2026/","seen":"2026-10-09"}],"reports":[{"date":"2026-10-07","symbols":"TLW","headline":"Tullow starts selling Jubilee, TEN crude to Ghanaian refineries","publisher":"MyJoyOnline","category":"General","url":"https://www.myjoyonline.com/tullow-starts-selling-jubilee-ten-crude-to-ghanaian-refineries/"},{"date":"2026-10-07","symbols":"TLW","headline":"Tullow Opens Domestic Market for Jubilee and TEN Crude as Ghana Pushes Local Refining","publisher":"Norvan Reports","category":"General","url":"https://norvanreports.com/tullow-opens-domestic-market-for-jubilee-and-ten-crude-as-ghana-pushes-local-refining/"},{"date":"2026-10-07","symbols":"GCB","headline":"GCB Bank targets MSME financing gap with unsecured loans of up to GH¢1m","publisher":"Citi Newsroom","category":"Deals and capital","url":"https://www.citinewsroom.com/2026/10/gcb-bank-targets-msme-financing-gap-with-unsecured-loans-of-up-to-gh%c2%a21m/"},{"date":"2026-10-07","symbols":"SOGEGH","headline":"Attijariwafa’s acquisition of Societe Generale Ghana unlikely to pressure capital – Fitch","publisher":"Citi Newsroom","category":"Deals and capital","url":"https://www.citinewsroom.com/2026/10/attijariwafas-acquisition-of-societe-generale-ghana-unlikely-to-pressure-capital-fitch/"},{"date":"2026-10-06","symbols":"TLW","headline":"Tullow Oil posts $101m half-year loss despite production gains","publisher":"MyJoyOnline","category":"Results","url":"https://www.myjoyonline.com/tullow-oil-posts-101m-half-year-loss-despite-production-gains/"},{"date":"2026-10-06","symbols":"MTNGH","headline":"MTN Targets Africa’s $100bn Gaming Industry","publisher":"Daily Guide Network","category":"Deals and capital","url":"https://dailyguidenetwork.com/mtn-targets-africas-100bn-gaming-industry/"},{"date":"2026-10-06","symbols":"GCB","headline":"GCB MSME Caravan Clinic unfolds in Accra, boosting support for Ghanaian small businesses","publisher":"MyJoyOnline","category":"General","url":"https://www.myjoyonline.com/gcb-msme-caravan-clinic-unfolds-in-accra-boosting-support-for-ghanaian-small-businesses/"},{"date":"2026-10-06","symbols":"GCB","headline":"GCB Bank urges MSMEs to formalise businesses for easier access to finance","publisher":"MyJoyOnline","category":"Deals and capital","url":"https://www.myjoyonline.com/gcb-bank-urges-msmes-to-formalise-businesses-for-easier-access-to-finance/"},{"date":"2026-10-06","symbols":"EGH","headline":"Ecobank Ghana commissions digital learning centre at La-Nkwantanang schools","publisher":"MyJoyOnline","category":"Community and sponsorship","url":"https://www.myjoyonline.com/ecobank-ghana-commissions-digital-learning-centre-at-la-nkwantanang-schools/"},{"date":"2026-10-05","symbols":"MTNGH","headline":"SavannaFest Tournament: Coach appeals to MTN to invite scouts in future tournaments","publisher":"MyJoyOnline","category":"Community and sponsorship","url":"https://www.myjoyonline.com/savannafest-tournament-coach-appeals-to-mtn-to-invite-scouts-in-future-tournaments/"},{"date":"2026-10-05","symbols":"SIC","headline":"NIB, SIC Life launch bancassurance partnership to maximise protection","publisher":"Ghana News Agency","category":"Products and partnerships","url":"https://gna.org.gh/2026/10/nib-sic-life-launch-bankassurance-partnership-to-maximise-protection/"},{"date":"2026-10-05","symbols":"SIC","headline":"NIB, SIC Life launch Bancassurance product to deepen insurance penetration","publisher":"Ghanaian Times","category":"Products and partnerships","url":"https://ghanaiantimes.com.gh/nib-sic-life-launch-bancassurance-product-to-deepen-insurance-penetration/"}],"upcoming":[{"title":"2027 Budget Statement to Parliament","date_text":"First week of November 2026; the law requires presentation by 15 November","status":"expected","who_says":"Finance Minister Cassiel Ato Forson (interview reported by Adom Online, 15 September 2026)","url":"https://www.adomonline.com/finance-minister-hints-at-first-week-in-november-for-presentation-of-2027-budget/"}],"watching":[{"title":"Next Bank of Ghana Monetary Policy Committee meeting (the 133rd)","why":"The committee met on 23 and 24 September 2026 (132nd meeting). Meetings have been about every two months, so another is likely in November, but no notice of the next meeting was found. The Bank usually publishes a notice a few weeks ahead.","url":"https://www.bog.gov.gh/mpc_press_release/mpc-press-release-september-2026/","checked":"2026-10-09"}],"reports_as_of":"2026-10-07","announcements_as_of":"2026-10-22"},"method":{"range":[{"years":1,"low":0.51,"high":1.94},{"years":3,"low":0.32,"high":3.16},{"years":5,"low":0.23,"high":4.42}]},"sources":[{"name":"Ghana Stock Exchange, daily trading data","url":"https://gse.com.gh/trading-and-data/","as_of":"2026-10-21"},{"name":"Ghana Stock Exchange, daily market summary (indices, market capitalisation)","url":"https://gse.com.gh/trading-and-data/","as_of":"2026-10-21"},{"name":"Bank of Ghana, treasury bill auction rates","url":"https://www.bog.gov.gh/treasury-and-the-market/treasury-bill-rates/","as_of":"2026-09-14"},{"name":"Ghana Stock Exchange, press releases (announcements)","url":"https://gse.com.gh/","as_of":"2026-10-22"},{"name":"Media reports: each item links to its own publisher","url":"","as_of":"2026-10-07"}]}</script>
+<script>
+(function () {
+  'use strict';
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var X = D.index;
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function dt(iso) { if (!iso) return 'n/a'; var p = iso.split('-'); return (+p[2]) + ' ' + MON[+p[1] - 1] + ' ' + p[0]; }
+  function num(v, d) { return v == null ? 'n/a' : v.toLocaleString('en-GB', {minimumFractionDigits: d, maximumFractionDigits: d}); }
+  function cls(v) { return v == null ? 'flat' : v > 0 ? 'up' : v < 0 ? 'down' : 'flat'; }
+  function arrow(v) { return v == null ? '' : v > 0 ? '▲' : v < 0 ? '▼' : '■'; }
+  function pill(v, label, d) { if (v == null) return ''; return '<span class="pill ' + cls(v) + '">' + arrow(v) + ' ' + (v > 0 ? '+' : '') + num(v, d == null ? 1 : d) + '%' + (label ? ' ' + label : '') + '</span>'; }
+  function yearsListed(s) { return (new Date(D.price_as_of) - new Date(s.first_price_date)) / (365.25 * 864e5); }
+  function pct(v, s, yrs) {
+    if (v == null) {
+      var why = s && yearsListed(s) < yrs ? 'priced since ' + MON[+s.first_price_date.slice(5, 7) - 1] + ' ' + s.first_price_date.slice(0, 4) : 'no price at the start date';
+      return '<span class="flat" title="Not enough price history: ' + why + '">–<span class="dashnote">' + why + '</span></span>';
+    }
+    var big = Math.abs(v) >= 300;
+    return '<span class="' + (big ? 'flat' : cls(v)) + '"' + (big ? ' title="Very large move on a low-priced, rarely traded share. Check the exchange source."' : '') + '>' + (v > 0 ? '+' : '') + num(v, 1) + '%' + (big ? '*' : '') + '</span>';
+  }
+
+  // ---- headline
+  var t91 = (D.tbills || []).filter(function (t) { return t.tenor_days === 91; })[0];
+  document.getElementById('stamp').innerHTML = 'End-of-day figures &middot; trading date <b>' + dt(X.date) + '</b> &middot; Source: Ghana Stock Exchange';
+  var kp = [
+    {c: 'var(--blue)', l: 'GSE Composite Index', v: num(X.ci, 2), s: pill(X.ci_chg_1d, 'day', 2) + pill(X.ci_ytd, 'YTD') + pill(X.ci_1y, '1 yr')},
+    {c: 'var(--violet)', l: 'Financial Stock Index', v: num(X.fi, 2), s: pill(X.fi_chg_1d, 'day', 2)},
+    {c: 'var(--teal)', l: 'Market capitalisation', v: 'GHS ' + num(X.market_cap_ghs_m / 1e3, 1) + ' bn', s: D.counts.active_shares + ' shares and ETFs priced'},
+    {c: 'var(--amber)', l: '91-day treasury bill', v: t91 ? num(t91.rate_pct, 2) + '%' : 'n/a', s: t91 ? '<span class="pill amber">last auction ' + dt(t91.as_of) + '</span>' : ''}
+  ];
+  document.getElementById('kpis').innerHTML = kp.map(function (k) { return '<div class="kpi" style="--c:' + k.c + '"><div class="l">' + k.l + '</div><div class="v">' + k.v + '</div><div class="s">' + k.s + '</div></div>'; }).join('');
+
+  // ---- chart
+  var svg = document.getElementById('chart'), tip = document.getElementById('tip'), W = 1e3, H = 320, PL = 14, PR = 62, PT = 16, PB = 34;
+  var series = X.series, view = [], hover = -1;
+  function slice(p) {
+    var last = series[series.length - 1][0], y = +last.slice(0, 4), from;
+    if (p === 'ytd') from = (y - 1) + '-12-31'; else if (p === '1y') from = (y - 1) + last.slice(4); else if (p === '3y') from = (y - 3) + last.slice(4); else from = '0000';
+    var s = series.filter(function (r) { return r[0] >= from; });
+    if (p === 'ytd') { var base = series.filter(function (r) { return r[0] <= (y - 1) + '-12-31'; }).pop(); if (base) s.unshift(base); }
+    return s;
+  }
+  function draw(p) {
+    view = slice(p);
+    var vals = view.map(function (r) { return r[1]; }), lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pad = (hi - lo) * 0.08 || 1;
+    lo -= pad; hi += pad;
+    var x = function (i) { return PL + i * (W - PL - PR) / Math.max(1, view.length - 1); }, y = function (v) { return PT + (hi - v) * (H - PT - PB) / (hi - lo); };
+    var first = vals[0], lastv = vals[vals.length - 1], chg = (lastv / first - 1) * 100, col = chg >= 0 ? 'var(--up)' : 'var(--down)';
+    var d = view.map(function (r, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ',' + y(r[1]).toFixed(1); }).join('');
+    var g = '';
+    var raw = (hi - lo) / 4, mag = Math.pow(10, Math.floor(Math.log10(raw))), step = [1, 2, 2.5, 5, 10].map(function (m) { return m * mag; }).filter(function (s) { return s >= raw; })[0];
+    for (var v = Math.ceil(lo / step) * step; v <= hi; v += step) { g += '<line class="grid" x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) + '"/><text class="ax" x="' + (W - PR + 8) + '" y="' + (y(v) + 4).toFixed(1) + '">' + Math.round(v).toLocaleString('en-GB') + '</text>'; }
+    var seen = {};
+    view.forEach(function (r, i) { var key = p === 'ytd' || p === '1y' ? r[0].slice(0, 7) : r[0].slice(0, 4); if (!seen[key] && i > 0) { seen[key] = 1; var lab = p === 'ytd' || p === '1y' ? MON[+r[0].slice(5, 7) - 1] : r[0].slice(0, 4); g += '<text class="ax" text-anchor="middle" x="' + x(i).toFixed(1) + '" y="' + (H - 10) + '">' + lab + '</text>'; } else if (!seen[key]) seen[key] = 1; });
+    svg.innerHTML = '<defs><linearGradient id="fillg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + (chg >= 0 ? '#12804c' : '#c5352b') + '" stop-opacity=".22"/><stop offset="1" stop-color="' + (chg >= 0 ? '#12804c' : '#c5352b') + '" stop-opacity="0"/></linearGradient></defs>' + g +
+      '<path d="' + d + 'L' + x(view.length - 1).toFixed(1) + ',' + (H - PB) + 'L' + PL + ',' + (H - PB) + 'Z" fill="url(#fillg)"/>' +
+      '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<line id="cross" x1="0" x2="0" y1="' + PT + '" y2="' + (H - PB) + '" stroke="var(--muted)" stroke-dasharray="4 4" opacity="0"/><circle id="dot" r="5" fill="' + col + '" stroke="var(--panel)" stroke-width="2" opacity="0"/>' +
+      '<circle cx="' + x(view.length - 1).toFixed(1) + '" cy="' + y(lastv).toFixed(1) + '" r="4.5" fill="' + col + '"/>';
+    document.getElementById('period').innerHTML = {ytd: 'Year to date', '1y': 'Last 12 months', '3y': 'Last 3 years', max: 'Since ' + dt(view[0][0])}[p] + ': <span class="' + cls(chg) + '">' + (chg > 0 ? '+' : '') + num(chg, 1) + '%</span>';
+    svg.setAttribute('aria-label', 'GSE Composite Index, ' + dt(view[0][0]) + ' to ' + dt(view[view.length - 1][0]) + ', from ' + num(first, 2) + ' to ' + num(lastv, 2) + ' (' + (chg > 0 ? '+' : '') + num(chg, 1) + '%)');
+    svg._x = x; svg._y = y; hover = -1; tip.style.opacity = 0;
+  }
+  function show(i) {
+    if (i < 0 || i >= view.length) return;
+    hover = i; var r = view[i], px = svg._x(i), py = svg._y(r[1]);
+    var c = svg.querySelector('#cross'), dot = svg.querySelector('#dot');
+    c.setAttribute('x1', px); c.setAttribute('x2', px); c.setAttribute('opacity', 1); dot.setAttribute('cx', px); dot.setAttribute('cy', py); dot.setAttribute('opacity', 1);
+    var rect = svg.getBoundingClientRect(), sx = rect.width / W;
+    tip.textContent = dt(r[0]) + ' · ' + num(r[1], 2);
+    tip.style.left = Math.min(Math.max(px * sx, 70), rect.width - 70) + 'px'; tip.style.top = (py * sx) + 'px'; tip.style.opacity = 1;
+  }
+  function pick(ev) { var rect = svg.getBoundingClientRect(), cx = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left) * W / rect.width; show(Math.round((cx - PL) / ((W - PL - PR) / Math.max(1, view.length - 1)))); }
+  svg.addEventListener('mousemove', pick); svg.addEventListener('touchstart', pick, {passive: true}); svg.addEventListener('touchmove', pick, {passive: true});
+  svg.addEventListener('mouseleave', function () { tip.style.opacity = 0; });
+  svg.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); show(hover < 0 ? view.length - 1 : Math.max(0, Math.min(view.length - 1, hover + (e.key === 'ArrowLeft' ? -1 : 1)))); }
+    if (e.key === 'Home') { e.preventDefault(); show(0); } if (e.key === 'End') { e.preventDefault(); show(view.length - 1); }
+  });
+  document.querySelectorAll('.seg button').forEach(function (b) {
+    b.addEventListener('click', function () { document.querySelectorAll('.seg button').forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); }); draw(b.dataset.p); });
+  });
+  draw('ytd');
+  document.getElementById('ci-src').textContent = 'Source: Ghana Stock Exchange daily market summary, to ' + dt(X.date) + '. Price index: dividends are not included.';
+
+  // ---- breadth
+  var S = D.shares, up = 0, down = 0, same = 0, none = 0;
+  S.forEach(function (s) { if (!s.traded_last_session) none++; else if (s.chg_1d > 0) up++; else if (s.chg_1d < 0) down++; else same++; });
+  var parts = [['Closed higher', up, 'var(--up)'], ['Closed lower', down, 'var(--down)'], ['Traded, unchanged', same, 'var(--amber)'], ['No trade', none, 'var(--line)']];
+  document.getElementById('bar').innerHTML = parts.map(function (p) { return p[1] ? '<span style="width:' + (p[1] / S.length * 100) + '%;background:' + p[2] + '"></span>' : ''; }).join('');
+  document.getElementById('legend').innerHTML = parts.map(function (p) { return '<span><i style="background:' + p[2] + '"></i><b>' + p[1] + '</b> ' + p[0] + '</span>'; }).join('') + '<span class="flat">of ' + S.length + ' shares, ' + dt(D.price_as_of) + '</span>';
+
+  // ---- shares table
+  var mode = 'active', q = '', showAll = false, LIMIT = 12;
+  var sorters = {
+    active: function (a, b) { return (b.traded_share_12m || 0) - (a.traded_share_12m || 0) || a.symbol.localeCompare(b.symbol); },
+    dayup: function (a, b) { return (b.chg_1d == null ? -1e9 : b.chg_1d) - (a.chg_1d == null ? -1e9 : a.chg_1d); },
+    daydown: function (a, b) { return (a.chg_1d == null ? 1e9 : a.chg_1d) - (b.chg_1d == null ? 1e9 : b.chg_1d); },
+    y1: function (a, b) { return (b.chg_1y == null ? -1e9 : b.chg_1y) - (a.chg_1y == null ? -1e9 : a.chg_1y); },
+    az: function (a, b) { return a.symbol.localeCompare(b.symbol); }
+  };
+  function row(s) {
+    var d = s.chg_1d, moved = d != null && d !== 0;
+    var vs = s.prev_close == null ? '<span class="flat">–</span>' :
+      '<span class="pill ' + cls(d) + '">' + arrow(d) + ' ' + (d > 0 ? '+' : '') + num(d, 2) + '%</span>' + (!s.traded_last_session ? '<br><span class="notrade">no trade</span>' : '');
+    var m = s.traded_share_12m == null ? 'n/a' : '<span class="meter"><span class="track"><span class="fill" style="width:' + s.traded_share_12m + '%"></span></span>' + num(s.traded_share_12m, 0) + '%</span>';
+    return '<tr><th scope="row"><b>' + esc(s.symbol) + '</b>' + (s.name ? '<span>' + esc(s.name) + '</span>' : '') + '</th>' +
+      '<td class="close" data-label="Close (GHS)"><span><b class="' + (moved ? cls(d) : '') + '">' + num(s.price, 2) + '</b><small>prev ' + (s.prev_close == null ? '–' : num(s.prev_close, 2)) + '</small></span></td>' +
+      '<td data-label="vs previous close"><span>' + vs + '</span></td>' +
+      '<td data-label="1 year"><span>' + pct(s.chg_1y, s, 1) + '</span></td><td data-label="5 years"><span>' + pct(s.chg_5y, s, 5) + '</span></td>' +
+      '<td data-label="Days traded, 12 months">' + m + '</td></tr>';
+  }
+  function render() {
+    var t = q.trim().toLowerCase();
+    var list = S.filter(function (s) { return (!t || s.symbol.toLowerCase().indexOf(t) >= 0 || (s.name || '').toLowerCase().indexOf(t) >= 0) && ((mode !== 'dayup' && mode !== 'daydown') || (s.traded_last_session && s.chg_1d)); }).sort(sorters[mode]);
+    var shown = (showAll || t) ? list : list.slice(0, LIMIT);
+    document.getElementById('rows').innerHTML = shown.map(row).join('') || '<tr><td colspan="6" style="text-align:left">No share matches that search.</td></tr>';
+    document.getElementById('count').textContent = shown.length + ' of ' + S.length + ' shown';
+    var more = document.getElementById('more');
+    more.hidden = !!t || list.length <= LIMIT;
+    more.textContent = showAll ? 'Show fewer' : 'Show all ' + list.length + ' shares';
+  }
+  function setMode(m) { mode = m; document.getElementById('sortsel').value = m; document.querySelectorAll('.chips button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.s === m ? 'true' : 'false'); }); render(); }
+  document.querySelectorAll('.chips button').forEach(function (b) { b.addEventListener('click', function () { setMode(b.dataset.s); }); });
+  document.getElementById('sortsel').addEventListener('change', function (e) { setMode(e.target.value); });
+  document.getElementById('more').addEventListener('click', function () { showAll = !showAll; render(); });
+  var input = document.getElementById('q'); input.addEventListener('input', function () { q = input.value; render(); });
+  var mic = document.getElementById('mic'), hint = document.getElementById('mic-hint'), SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  function sayHint(t) { hint.textContent = t; hint.hidden = false; }
+  mic.addEventListener('click', function () {
+    if (!SR) { input.focus(); sayHint('Voice input is not available in this browser. Windows: Win + H · Phone: keyboard mic.'); return; }
+    sayHint('Listening. Your browser’s speech service may send the audio to its provider.');
+    var rec = new SR(); rec.lang = 'en-GB'; rec.interimResults = false; mic.setAttribute('aria-pressed', 'true');
+    rec.onresult = function (e) { input.value = e.results[0][0].transcript.replace(/[.\s]+$/, ''); q = input.value; render(); };
+    rec.onend = function () { mic.setAttribute('aria-pressed', 'false'); };
+    rec.onerror = function () { mic.setAttribute('aria-pressed', 'false'); input.focus(); sayHint('The microphone was not available. Windows: Win + H · Phone: keyboard mic.'); };
+    rec.start();
+  });
+  render();
+  document.getElementById('sh-note').textContent = 'Source: Ghana Stock Exchange daily trading data, to ' + dt(D.price_as_of) + '. "vs previous close" compares the last close with the session before. Price changes exclude dividends. * marks a move of 300% or more, usually a very low-priced, rarely traded share; it is shown in grey. Delisted shares are left out.';
+
+  // ---- bills
+  var maxRate = Math.max.apply(null, D.tbills.map(function (t) { return t.high_rate_pct || t.rate_pct; })) * 1.05;
+  var bcol = {91: 'var(--teal)', 182: 'var(--blue)', 364: 'var(--violet)'};
+  document.getElementById('billcards').innerHTML = D.tbills.map(function (t) {
+    var pos = function (v) { return (v / maxRate * 100).toFixed(1) + '%'; };
+    return '<div class="card bill tile" style="--c:' + bcol[t.tenor_days] + '"><span class="tag" style="--cs:var(--band)">' + t.tenor_days + '-day bill</span><div class="v">' + num(t.rate_pct, 2) + '%</div>' +
+      '<div class="flat" style="font-size:.88rem">last available auction in our checked data: ' + dt(t.as_of) + '</div>' +
+      '<div class="rangebar" role="img" aria-label="Past 12-month moves put this rate between ' + num(t.low_rate_pct, 1) + '% and ' + num(t.high_rate_pct, 1) + '%"><i style="left:' + pos(t.rate_pct) + '"></i></div>' +
+      '<div class="rangelab"><span>' + num(t.low_rate_pct, 1) + '%</span><span>' + num(t.high_rate_pct, 1) + '%</span></div>' +
+      '<p style="margin:10px 0 0;font-size:.93rem">Rolled over at today’s rate: about <b>' + num(t.base_annual_pct, 1) + '%</b> a year. In the past, this rate has moved by as much as the bar shows within 12 months.</p></div>';
+  }).join('');
+  document.getElementById('tb-src').textContent = 'Source: Bank of Ghana treasury-bill auction results. The last auction in the lab’s checked data is ' + dt(D.tbill_as_of) + '; the Bank holds auctions weekly, so newer rates exist and will appear once checked. Rates are interest-equivalent, before tax.';
+
+  // ---- news
+  var N = D.news;
+  var KEEP = /^(PLC|GSE|PR-\d+|SIC|GOIL|GCB|MTN|ETF|NAV|IPO|AGM|EGM|BOG|PZC|CAL|ADB|UTB|GLD|SOGEGH|ACCESS|FML|TOTAL|EGH|EGL|UNIL|BOPP|SCB)$/;
+  function sentence(s) { var w = String(s).split(' '); return w.map(function (x, i) { var bare = x.replace(/[^A-Za-z0-9-]/g, ''); if (KEEP.test(bare) || /\d/.test(bare)) return x; var l = x.toLowerCase(); if (/^(january|february|march|april|may|june|july|august|september|october|november|december|ghana|ghanaian)$/.test(l.replace(/[^a-z]/g, ''))) return l.charAt(0).toUpperCase() + l.slice(1); return i === 1 || (i === 0 && !/^PR-/.test(x)) ? l.charAt(0).toUpperCase() + l.slice(1) : l; }).join(' '); }
+  function feed(items, f) { return items.length ? items.map(f).join('') : '<li><span></span><span class="flat">Nothing in this window.</span></li>'; }
+  document.getElementById('feed-ann').innerHTML = feed(N.announcements, function (a) {
+    return '<li><time datetime="' + a.seen + '">' + dt(a.seen) + '</time><span><a href="' + esc(a.url) + '" rel="noopener">' + esc(sentence(a.title)) + '</a><span class="meta">Ghana Stock Exchange press release</span></span></li>'; });
+  document.getElementById('feed-rep').innerHTML = feed(N.reports, function (r) {
+    return '<li><time datetime="' + r.date + '">' + dt(r.date) + '</time><span><a href="' + esc(r.url) + '" rel="noopener">' + esc(r.headline) + '</a><span class="meta">' + esc(r.publisher) + (r.symbols ? ' &middot; mentions ' + esc(r.symbols) : '') + '</span></span></li>'; });
+  document.getElementById('feed-up').innerHTML = feed(N.upcoming.map(function (u) { return {k: 'u', v: u}; }).concat(N.watching.map(function (w) { return {k: 'w', v: w}; })), function (x) {
+    var u = x.v;
+    return x.k === 'u'
+      ? '<li><time>' + esc(u.status) + '</time><span><a href="' + esc(u.url) + '" rel="noopener">' + esc(u.title) + '</a><span class="meta">' + esc(u.date_text) + ' &middot; according to ' + esc(u.who_says) + '</span></span></li>'
+      : '<li><time>watching</time><span><a href="' + esc(u.url) + '" rel="noopener">' + esc(u.title) + '</a><span class="meta">' + esc(u.why) + ' (checked ' + dt(u.checked) + ')</span></span></li>'; });
+  document.getElementById('nw-src').textContent = 'Announcements: Ghana Stock Exchange press releases; the date shown is when the lab first saw each one, which can be a day or two after release. Reports: the 12 newest relevant headlines from registered Ghanaian outlets, collected weekly; the newest collected item is dated ' + dt(N.reports_as_of) + ', so the most recent days may not be included yet. "Coming up" lists only events a named official or organiser has announced; the lab adds no predictions of its own.';
+  var tabs = [].slice.call(document.querySelectorAll('[role=tab]'));
+  function selectTab(b) { tabs.forEach(function (o) { var on = o === b; o.setAttribute('aria-selected', on); o.tabIndex = on ? 0 : -1; document.getElementById(o.getAttribute('aria-controls')).hidden = !on; }); }
+  tabs.forEach(function (b, i) {
+    b.addEventListener('click', function () { selectTab(b); });
+    b.addEventListener('keydown', function (e) { var n = null; if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]; if (e.key === 'Home') n = tabs[0]; if (e.key === 'End') n = tabs[tabs.length - 1]; if (n) { selectTab(n); n.focus(); e.preventDefault(); } });
+  });
+
+  // ---- method band table
+  document.querySelector('#bandtbl tbody').innerHTML = D.method.range.map(function (r) { return '<tr><td>' + r.years + (r.years === 1 ? ' year' : ' years') + '</td><td>×' + num(r.low, 2) + '</td><td>×' + num(r.high, 2) + '</td></tr>'; }).join('');
+
+  // ---- definitions
+  var T = [
+    ['Closing price', 'The price the exchange publishes for a share at the end of a trading day.', 'A share closing at GHS 6.50 means that is its published price for that day.'],
+    ['Previous close and daily change', 'Yesterday’s closing price, and how far today’s close is above or below it.', 'Up from 6.40 to 6.51 is +1.72%, shown in green.'],
+    ['No trade', 'Nobody bought or sold the share that day, so its price simply carries over.', 'Many smaller GSE shares go weeks without a trade.'],
+    ['GSE Composite Index', 'One number that tracks the prices of all ordinary shares listed on the exchange.', 'If the index rises 10%, listed share prices rose about 10% on a weighted basis.'],
+    ['Financial Stock Index', 'The same idea, for banks and other financial companies only.', 'It shows whether financial shares moved with or against the market.'],
+    ['Year to date (YTD)', 'The change from the last close of the previous year to the latest close.', 'An index at 110 now and 100 at 31 December is +10% YTD.'],
+    ['Market capitalisation', 'Share price times the number of shares, added up across the exchange.', '10 million shares at GHS 2.00 is a market capitalisation of GHS 20 million.'],
+    ['Price change vs return', 'Price change ignores dividends; a total return adds them. This page shows price change.', 'A share flat on price that paid a 5% dividend returned about 5%.'],
+    ['Days traded', 'The share of trading days in the last 12 months on which the share actually traded.', '20% means it traded on about 1 day in 5, so selling may take time.'],
+    ['Treasury bill', 'A short loan to the Government of Ghana for 91, 182 or 364 days, bought at auction.', 'A 91-day bill at 4.7% earns about 1.2% over its three months.'],
+    ['Rolling over', 'Reinvesting a bill into a new one when it matures, at whatever the new rate is.', 'If rates fall, the next bill earns less.'],
+    ['Nominal vs real', 'Nominal is in cedis; real subtracts inflation to show buying power.', '15% growth with 20% inflation is about –4% in real terms.']
+  ];
+  var cols = ['var(--blue)', 'var(--teal)', 'var(--violet)', 'var(--coral)', 'var(--amber)'];
+  document.getElementById('termgrid').innerHTML = T.map(function (t, i) { return '<div class="card term tile" style="--c:' + cols[i % cols.length] + '"><h3>' + t[0] + '</h3><p>' + t[1] + '</p><p class="ex">Example: ' + t[2] + '</p></div>'; }).join('');
+
+  // ---- sources
+  document.getElementById('sources').innerHTML = D.sources.map(function (s) { return '<li>' + (s.url ? '<a href="' + esc(s.url) + '" rel="noopener">' + esc(s.name) + '</a>' : esc(s.name)) + ', data to ' + dt(s.as_of) + '</li>'; }).join('');
+  document.getElementById('built').textContent = 'Page built ' + D.generated_utc.replace('T', ' ').replace('Z', '') + ' UTC. Research and education only.';
+})();
+</script>
+</body>
+</html>
